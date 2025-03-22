@@ -92,6 +92,7 @@ public class User extends Model<User> {
     public static final String USER_REGIONS = "User_Regions";
 
     public static final String USER_UNI = "User_Uni";
+    
 
     @Override
     public Serializable pkVal() {

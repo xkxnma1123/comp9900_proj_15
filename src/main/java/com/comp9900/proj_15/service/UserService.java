@@ -1,16 +1,18 @@
 package com.comp9900.proj_15.service;
 
-import com.comp9900.proj_15.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.Map;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
- * @author comp9900_proj15
- * @since 2025-03-21
+ * 用户服务接口
  */
-public interface UserService extends IService<User> {
-
+public interface UserService {
+    /**
+     * 用户注册
+     */
+    Map<String, Object> register(String name, String email, String levelOfStudy, String password);
+    
+    /**
+     * 用户登录
+     */
+    Map<String, Object> login(String email, String password);
 }
