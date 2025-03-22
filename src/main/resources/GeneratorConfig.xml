@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "https://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="MySQLContext" targetRuntime="MyBatis3" defaultModelType="flat">
+        <!-- 生成的Java文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+        <!-- 格式化Java代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- 不生成注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接信息 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/backend_db"
+                        userId="root"
+                        password="ab20011123">
+            <!-- MySQL 8.0+ 需要设置 -->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- Java类型解析器 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+            <!-- 使用 Java8 的日期类型 -->
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+
+        <!-- 实体类生成配置 -->
+        <javaModelGenerator targetPackage="com.comp9900.proj_15.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- Mapper XML文件生成配置 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- Mapper接口生成配置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.comp9900.proj_15.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 指定数据库表 -->
+        <!-- User表配置 -->
+        <table tableName="User" domainObjectName="User">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="ID" sqlStatement="JDBC" identity="true"/>
+        </table>
+
+        <!-- Event表配置 -->
+        <table tableName="Event" domainObjectName="Event">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="ID" sqlStatement="JDBC" identity="true"/>
+        </table>
+
+        <!-- Friends表配置 -->
+        <table tableName="Friends" domainObjectName="Friends">
+            <property name="useActualColumnNames" value="true"/>
+            <!-- 复合主键不需要generatedKey -->
+        </table>
+
+        <!-- Message表配置 -->
+        <table tableName="Message" domainObjectName="Message">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="MSG_ID" sqlStatement="JDBC" identity="true"/>
+        </table>
+
+        <!-- User_Event表配置 -->
+        <table tableName="User_Event" domainObjectName="UserEvent">
+            <property name="useActualColumnNames" value="true"/>
+            <!-- 复合主键不需要generatedKey -->
+        </table>
+    </context>
+</generatorConfiguration>

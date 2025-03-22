@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.comp9900.proj_15.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.comp9900.proj_15.entity.User">
+        <id column="ID" property="id" />
+        <result column="Name" property="name" />
+        <result column="Level_of_study" property="levelOfStudy" />
+        <result column="Email" property="email" />
+        <result column="Password_hash" property="passwordHash" />
+        <result column="Created_at" property="createdAt" />
+        <result column="User_Type" property="userType" />
+        <result column="User_city" property="userCity" />
+        <result column="User_country" property="userCountry" />
+        <result column="User_Field" property="userField" />
+        <result column="User_Language" property="userLanguage" />
+        <result column="User_Regions" property="userRegions" />
+        <result column="User_Uni" property="userUni" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, Name, Level_of_study, Email, Password_hash, Created_at, User_Type, User_city, User_country, User_Field, User_Language, User_Regions, User_Uni
+    </sql>
+
+</mapper>
