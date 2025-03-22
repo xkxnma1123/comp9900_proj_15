@@ -47,4 +47,10 @@ public interface UserMapper extends BaseMapper<User> {
      */
     @Select("SELECT password_hash FROM User WHERE email = #{email}")
     String getPasswordByEmail(@Param("email") String email);
+
+    /**
+     * 根据ID检查用户是否存在
+     */
+    @Select("SELECT COUNT(*) FROM User WHERE ID = #{id}")
+    Long countById(@Param("id") Integer id);
 }
