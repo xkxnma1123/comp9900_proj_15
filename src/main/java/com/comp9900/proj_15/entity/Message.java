@@ -43,7 +43,7 @@ public class Message extends Model<Message> {
     @TableField("created_at")
     private LocalDateTime createdAt;
 
-    @TableField("read")
+    @TableField("`read`")
     private Boolean read;
 
     public static final String MSG_ID = "MSG_ID";

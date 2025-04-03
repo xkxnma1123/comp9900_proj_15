@@ -1,5 +1,6 @@
 package com.comp9900.proj_15.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -26,7 +27,11 @@ public class Friends extends Model<Friends> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("UID")
+
+    @TableId(value = "FID", type = IdType.AUTO)
+    private Integer fid;
+
+    @TableField("UID")
     private Integer uid;
 
     @TableField("Friend_ID")
@@ -34,6 +39,8 @@ public class Friends extends Model<Friends> {
 
     @TableField("Status")
     private String status;
+
+    public static final String FID = "FID";
 
     public static final String UID = "UID";
 

@@ -4,14 +4,15 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.comp9900.proj_15.entity.Friends">
-        <id column="UID" property="uid" />
+        <id column="FID" property="fid" />
+        <result column="UID" property="uid" />
         <result column="Friend_ID" property="friendId" />
         <result column="Status" property="status" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        UID, Friend_ID, Status
+        FID, UID, Friend_ID, Status
     </sql>
 
 </mapper>
