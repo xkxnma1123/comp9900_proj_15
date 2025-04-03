@@ -1,24 +1,22 @@
 /*
  Navicat MySQL Dump SQL
-
  Source Server         : comp9900
  Source Server Type    : MySQL
  Source Server Version : 80035 (8.0.35)
  Source Host           : localhost:3306
  Source Schema         : backend_db
-
  Target Server Type    : MySQL
  Target Server Version : 80035 (8.0.35)
  File Encoding         : 65001
-
  Date: 21/03/2025 18:45:30
 */
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE DATABASE IF NOT EXISTS comp9900_db;
-
+-- 创建数据库
+DROP DATABASE IF EXISTS `backend_db`;
+CREATE DATABASE `backend_db`;
+USE `backend_db`;
 
 -- ----------------------------
 -- Table structure for Event
@@ -33,13 +31,11 @@ CREATE TABLE `Event` (
   `External_Link` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- ----------------------------
 -- Records of Event
 -- ----------------------------
 BEGIN;
 COMMIT;
-
 -- ----------------------------
 -- Table structure for Friends
 -- ----------------------------
@@ -53,13 +49,11 @@ CREATE TABLE `Friends` (
   CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `User` (`ID`) ON DELETE CASCADE,
   CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`Friend_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- ----------------------------
 -- Records of Friends
 -- ----------------------------
 BEGIN;
 COMMIT;
-
 -- ----------------------------
 -- Table structure for Message
 -- ----------------------------
@@ -77,13 +71,11 @@ CREATE TABLE `Message` (
   CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE,
   CONSTRAINT `message_ibfk_2` FOREIGN KEY (`receiver_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- ----------------------------
 -- Records of Message
 -- ----------------------------
 BEGIN;
 COMMIT;
-
 -- ----------------------------
 -- Table structure for User
 -- ----------------------------
@@ -102,16 +94,15 @@ CREATE TABLE `User` (
   `User_Language` varchar(40) DEFAULT NULL,
   `User_Regions` varchar(40) DEFAULT NULL,
   `User_Uni` varchar(40) DEFAULT NULL,
+  `Email_verified` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Email` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- ----------------------------
 -- Records of User
 -- ----------------------------
 BEGIN;
 COMMIT;
-
 -- ----------------------------
 -- Table structure for User_Event
 -- ----------------------------
@@ -125,11 +116,30 @@ CREATE TABLE `User_Event` (
   CONSTRAINT `user_event_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `User` (`ID`) ON DELETE CASCADE,
   CONSTRAINT `user_event_ibfk_2` FOREIGN KEY (`EID`) REFERENCES `Event` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- ----------------------------
 -- Records of User_Event
 -- ----------------------------
 BEGIN;
 COMMIT;
 
-SET FOREIGN_KEY_CHECKS = 1;
+-- ----------------------------
+-- Table structure for Verification_Code
+-- ----------------------------
+DROP TABLE IF EXISTS `Verification_Code`;
+CREATE TABLE `Verification_Code` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Email` varchar(40) NOT NULL,
+  `Code` varchar(10) NOT NULL,
+  `Expiry_date` datetime NOT NULL,
+  `Used` tinyint(1) NOT NULL DEFAULT '0',
+  `Created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  KEY `Email_index` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+-- ----------------------------
+-- Records of Verification_Code
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;User

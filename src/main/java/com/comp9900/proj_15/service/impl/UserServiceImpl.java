@@ -2,6 +2,7 @@ package com.comp9900.proj_15.service.impl;
 
 import com.comp9900.proj_15.mapper.UserMapper;
 import com.comp9900.proj_15.service.UserService;
+import com.comp9900.proj_15.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -17,6 +18,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private VerificationService verificationService;
 
     @Override
     public Map<String, Object> register(String name, String email, String levelOfStudy, String password) {
@@ -48,6 +52,14 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("用户创建失败");
             }
             
+            // 发送验证码邮件
+            try {
+                verificationService.sendVerificationCode(email);
+            } catch (Exception e) {
+                // 记录错误但继续流程
+                System.err.println("发送验证码邮件失败: " + e.getMessage());
+            }
+            
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,13 +82,29 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("密码错误");
         }
         
-        // 查询并返回用户信息
+        // 查询用户信息
         Map<String, Object> user = userMapper.findUserByEmail(email);
         
         if (user == null || user.isEmpty()) {
             throw new RuntimeException("获取用户信息失败");
         }
         
+        // 检查邮箱是否已验证
+        Object verifiedObj = user.get("email_verified");
+        if (!(verifiedObj instanceof Boolean && (Boolean) verifiedObj)) {
+            throw new RuntimeException("请先验证您的邮箱再登录");
+        }
+        
         return user;
+    }
+    
+    @Override
+    public boolean updateEmailVerificationStatus(String email, int verifiedStatus) {
+        return userMapper.updateEmailVerificationStatus(email, verifiedStatus) > 0;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userMapper.countByEmail(email) > 0;
     }
 }

@@ -15,4 +15,14 @@ public interface UserService {
      * 用户登录
      */
     Map<String, Object> login(String email, String password);
+    
+    /**
+     * 更新用户邮箱验证状态
+     */
+    boolean updateEmailVerificationStatus(String email, int verifiedStatus);
+    
+    /**
+     * 检查邮箱是否已注册
+     */
+    boolean existsByEmail(String email);
 }
