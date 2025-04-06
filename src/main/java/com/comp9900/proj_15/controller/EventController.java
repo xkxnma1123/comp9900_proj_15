@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ *  Frontend Controller
  * </p>
  *
  * @author comp9900_proj15
@@ -28,8 +28,7 @@ public class EventController {
     private EventService eventService;
 
     /**
-     * 获取活动列表
-     * @return 活动列表
+     * @return Event list
      */
     @GetMapping("/list")
     public R<List<Event>> getActivityList() {
@@ -38,10 +37,9 @@ public class EventController {
     }
 
     /**
-     * 分页获取活动列表
-     * @param current 当前页
-     * @param size 每页大小
-     * @return 分页活动列表
+     * @param current Current page
+     * @param size Page size
+     * @return Paginated event list
      */
     @GetMapping("/page")
     public R<IPage<Event>> getActivityListPage(
@@ -53,15 +51,14 @@ public class EventController {
     }
 
     /**
-     * 获取活动详情
-     * @param id 活动ID
-     * @return 活动详情
+     * @param id Event ID
+     * @return Event details
      */
     @GetMapping("/detail/{id}")
     public R<Event> getActivityDetail(@PathVariable Long id) {
         Event activity = eventService.getActivityById(id);
         if (activity == null) {
-            return R.error("活动不存在");
+            return R.error("Event does not exist");
         }
         return R.success(activity);
     }

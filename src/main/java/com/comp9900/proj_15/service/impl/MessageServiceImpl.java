@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  服务实现类
+ *  Service Implementation Class
  * </p>
  *
  * @author comp9900_proj15
@@ -32,24 +32,23 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    private FriendsService friendsService; // 注入你的好友服务
-
+    private FriendsService friendsService; // Inject your friend service
 
     @Override
     public Message sendMessage(Message message) {
-        // 验证发送者和接收者是否为好友
+        // Verify if sender and receiver are friends
         if (!areFriends(message.getSenderId(), message.getReceiverId())) {
-            throw new RuntimeException("用户不是好友关系，无法发送消息");
+            throw new RuntimeException("Users are not friends, cannot send messages");
         }
 
-        // 设置消息创建时间
+        // Set message creation time
         message.setCreatedAt(LocalDateTime.now());
-        message.setRead(null); // 忽略已读字段
+        message.setRead(null); // Ignore read field
 
-        // 保存消息到数据库
+        // Save message to database
         this.save(message);
 
-        // 发送消息到WebSocket
+        // Send message to WebSocket
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(message.getReceiverId()),
                 "/queue/messages",
@@ -59,13 +58,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return message;
     }
 
-
-
     @Override
     public List<Message> getMessagesBetweenUsers(Integer senderId, Integer receiverId) {
-        // 验证两用户是否为好友
+        // Verify if both users are friends
         if (!areFriends(senderId, receiverId)) {
-            throw new RuntimeException("用户不是好友关系，无法查看聊天记录");
+            throw new RuntimeException("Users are not friends, cannot view chat history");
         }
 
         LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
@@ -82,13 +79,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return this.list(queryWrapper);
     }
 
-    // 验证两个用户是否为好友关系的辅助方法
+    // Helper method to verify if two users are friends
     private boolean areFriends(Integer userId1, Integer userId2) {
         List<Map<String, Object>> friends = friendsService.getFriends(userId1);
 
         for (Map<String, Object> friend : friends) {
-            Integer friendId = (Integer) friend.get("Friend_ID"); // 假设Map中存储的好友ID的键为"userId"
-            //String status = (String) friend.get("Status");     // 假设状态的键为"status"
+            Integer friendId = (Integer) friend.get("Friend_ID"); // Assume the key for friend ID in Map is "userId"
+            //String status = (String) friend.get("Status");     // Assume the key for status is "status"
 
             if (friendId.equals(userId2)) {
                 return true;
@@ -97,6 +94,5 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
         return false;
     }
-
 
 }

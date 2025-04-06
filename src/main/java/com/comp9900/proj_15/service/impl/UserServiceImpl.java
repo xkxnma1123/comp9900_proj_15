@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * 用户服务实现
+ * User Service Implementation
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -81,61 +81,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //    }
     @Override
     public Map<String, Object> register(User user) {
-        // 检查邮箱是否已存在
+        // Check if email already exists
         Long count = userMapper.countByEmail(user.getEmail());
 
         if (count > 0) {
-            throw new RuntimeException("邮箱已被注册");
+            throw new RuntimeException("Email has already been registered");
         }
 
         try {
-            // 使用MD5加密密码
+            // Use MD5 to encrypt password
             String hashedPassword = DigestUtils.md5DigestAsHex(user.getPasswordHash().getBytes());
             user.setPasswordHash(hashedPassword);
 
-            // 设置创建时间
+            // Set creation time
             user.setCreatedAt(LocalDateTime.now());
 
-            // 设置默认用户类型
+            // Set default user type
             user.setUserType("normal");
 
-            // 插入用户数据
+            // Insert user data
             userMapper.insert(user);
 
-            // 查询并返回用户信息
+            // Query and return user information
             Map<String, Object> userMap = userMapper.findUserByEmail(user.getEmail());
 
             if (userMap == null || userMap.isEmpty()) {
-                throw new RuntimeException("用户创建失败");
+                throw new RuntimeException("User creation failed");
             }
 
             return userMap;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("创建用户失败: " + e.getMessage());
+            throw new RuntimeException("Failed to create user: " + e.getMessage());
         }
     }
 
     @Override
-    public Map<String, Object> login (String email, String password){
-        // 获取用户密码
+    public Map<String, Object> login(String email, String password) {
+        // Get user password
         String storedPassword = userMapper.getPasswordByEmail(email);
 
         if (storedPassword == null) {
-            throw new RuntimeException("用户不存在");
+            throw new RuntimeException("User does not exist");
         }
 
-        // 验证密码
+        // Verify password
         String hashedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!storedPassword.equals(hashedPassword)) {
-            throw new RuntimeException("密码错误");
+            throw new RuntimeException("Incorrect password");
         }
 
-        // 查询并返回用户信息
+        // Query and return user information
         Map<String, Object> user = userMapper.findUserByEmail(email);
 
         if (user == null || user.isEmpty()) {
-            throw new RuntimeException("获取用户信息失败");
+            throw new RuntimeException("Failed to get user information");
         }
 
         return user;
@@ -151,10 +151,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RestTemplate restTemplate;
 
     /**
-     * 获取所有国家列表
+     * Get all countries list
      */
     @Override
-    public List<Map<String, Object>> getAllCountries () {
+    public List<Map<String, Object>> getAllCountries() {
         String url = COUNTRY_STATE_CITY_API_URL + "/countries";
 
         HttpHeaders headers = new HttpHeaders();
@@ -185,10 +185,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 根据国家代码获取地区/省份列表
+     * Get regions/provinces list by country code
      */
     @Override
-    public List<Map<String, Object>> getRegionsByCountry (String countryCode){
+    public List<Map<String, Object>> getRegionsByCountry(String countryCode) {
         String url = COUNTRY_STATE_CITY_API_URL + "/countries/" + countryCode + "/states";
 
         HttpHeaders headers = new HttpHeaders();
@@ -219,10 +219,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 根据国家代码和地区代码获取城市列表
+     * Get cities list by country code and region code
      */
     @Override
-    public List<Map<String, Object>> getCitiesByRegion (String countryCode, String regionCode){
+    public List<Map<String, Object>> getCitiesByRegion(String countryCode, String regionCode) {
         String url = COUNTRY_STATE_CITY_API_URL + "/countries/" + countryCode + "/states/" + regionCode + "/cities";
 
         HttpHeaders headers = new HttpHeaders();
@@ -242,7 +242,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 if (obj instanceof Map) {
                     Map<String, Object> cityData = (Map<String, Object>) obj;
                     Map<String, Object> city = new HashMap<>();
-                    city.put("code", cityData.get("id").toString());  // 城市通常使用ID作为代码
+                    city.put("code", cityData.get("id").toString());  // Cities usually use ID as code
                     city.put("name", cityData.get("name"));
                     cities.add(city);
                 }
@@ -270,41 +270,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //    }
 
     /**
-     * 更新用户信息
+     * Update user information
      */
     @Override
-    public User updateUser (User user){
-        // 获取原有用户信息
+    public User updateUser(User user) {
+        // Get existing user information
         User existingUser = getById(user.getId());
         if (existingUser == null) {
             throw new RuntimeException("User not found with id: " + user.getId());
         }
 
-        // 如果提供了新密码，应该进行加密
+        // If new password is provided, it should be encrypted
         // if (user.getPasswordHash() != null && !user.getPasswordHash().equals(existingUser.getPasswordHash())) {
         //     user.setPasswordHash(encryptPassword(user.getPasswordHash()));
         // }
 
-        // 更新用户信息
+        // Update user information
         updateById(user);
 
         return getById(user.getId());
     }
 
     @Override
-    public Page<User> randomPageByConditions (Page < User > page, String field, String university, String city){
-        // 1. 先查询满足条件的所有ID
+    public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city) {
+        // 1. First query all IDs that meet the conditions
         List<Integer> allIds = baseMapper.selectIdsByCondition(field, university, city);
 
-        // 如果没有数据，返回空页
+        // If no data, return empty page
         if (allIds == null || allIds.isEmpty()) {
             return new Page<>(page.getCurrent(), page.getSize(), 0);
         }
 
-        // 2. 随机打乱ID列表
+        // 2. Randomly shuffle ID list
         Collections.shuffle(allIds);
 
-        // 3. 根据分页参数计算当前页的ID子集
+        // 3. Calculate current page's ID subset based on pagination parameters
         int startIndex = (int) ((page.getCurrent() - 1) * page.getSize());
         if (startIndex >= allIds.size()) {
             return new Page<>(page.getCurrent(), page.getSize(), allIds.size());
@@ -313,13 +313,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int endIndex = Math.min(startIndex + (int) page.getSize(), allIds.size());
         List<Integer> pageIds = allIds.subList(startIndex, endIndex);
 
-        // 4. 查询这批ID对应的完整记录数据
+        // 4. Query complete record data for these IDs
         List<User> users = new ArrayList<>();
         if (!pageIds.isEmpty()) {
             users = baseMapper.selectByIds(pageIds);
         }
 
-        // 5. 设置分页结果并返回
+        // 5. Set pagination result and return
         Page<User> resultPage = new Page<>(page.getCurrent(), page.getSize(), allIds.size());
         resultPage.setRecords(users);
 
@@ -328,14 +328,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Map<String, String> getUserPeerMatchInfo(Integer userId) {
-        // 根据用户ID查询用户
+        // Query user by user ID
         User user = userMapper.selectById(userId);
 
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new RuntimeException("User does not exist");
         }
 
-        // 创建返回的Map对象
+        // Create return Map object
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("userCity", user.getUserCity());
         userInfo.put("userUni", user.getUserUni());

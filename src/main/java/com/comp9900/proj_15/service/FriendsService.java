@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ *  Service Class
  * </p>
  *
  * @author comp9900_proj15
@@ -17,22 +17,22 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface FriendsService extends IService<Friends> {
     /**
-     * 发送好友请求
+     * Send friend request
      */
     void sendFriendRequest(Integer userId, Integer friendId);
     
     /**
-     * 处理好友请求
+     * Process friend request
      */
     void processFriendRequest(Integer userId, Integer friendId, String action);
     
     /**
-     * 获取好友请求列表
+     * Get friend request list
      */
     List<Map<String, Object>> getFriendRequests(Integer userId);
     
     /**
-     * 获取好友列表
+     * Get friend list
      */
     List<Map<String, Object>> getFriends(Integer userId);
 }

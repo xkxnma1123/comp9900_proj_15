@@ -27,9 +27,6 @@ import java.util.Map;
 public class FriendsController {
      @Autowired
     private FriendsService friendsService;
-    
-   
-    
 
     @PostMapping("/request")
     public R<Void> sendFriendRequest(@RequestBody Map<String, Object> params) {

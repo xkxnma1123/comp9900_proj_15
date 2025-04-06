@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 /**
  * <p>
- *  前端控制器
+ *  Frontend Controller
  * </p>
  *
  * @author comp9900_proj15
@@ -30,7 +30,7 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping
-    @ApiOperation("发送消息")
+    @ApiOperation("Send Message")
     @PreAuthorize("authentication.principal.username == #message.senderId.toString() or hasRole('ADMIN')")
     public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
         Message sentMessage = messageService.sendMessage(message);
@@ -38,7 +38,7 @@ public class MessageController {
     }
 
     @GetMapping("/between/{senderId}/{receiverId}")
-    @ApiOperation("获取用户间的聊天记录")
+    @ApiOperation("Get chat history between users")
     @PreAuthorize("authentication.principal.username == #senderId.toString() or authentication.principal.username == #receiverId.toString() or hasRole('ADMIN')")
     public ResponseEntity<List<Message>> getMessagesBetweenUsers(
             @PathVariable Integer senderId,

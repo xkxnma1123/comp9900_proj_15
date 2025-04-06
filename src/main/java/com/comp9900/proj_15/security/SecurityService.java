@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class SecurityService {
 
     /**
-     * 检查当前用户是否是指定资源的所有者
+     * Check if current user is the owner of specified resource
      */
     public boolean isResourceOwner(Long resourceUserId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -22,7 +22,7 @@ public class SecurityService {
     }
 
     /**
-     * 检查用户是否有特定角色
+     * Check if user has specific role
      */
     public boolean hasRole(String role) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -32,7 +32,7 @@ public class SecurityService {
     }
 
     /**
-     * 检查用户是否为资源所有者或管理员
+     * Check if user is resource owner or admin
      */
     public boolean isOwnerOrAdmin(Long resourceUserId) {
         return isResourceOwner(resourceUserId) || hasRole("ADMIN");

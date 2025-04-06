@@ -4,7 +4,7 @@ public class AuthRequest {
     private String username;
     private String password;
 
-    // 构造函数
+    // Constructor
     public AuthRequest() {
     }
 

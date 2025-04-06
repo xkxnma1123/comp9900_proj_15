@@ -29,29 +29,29 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Override
     public List<Event> getActivityList() {
-        // 创建查询条件
+
         LambdaQueryWrapper<Event> queryWrapper = new LambdaQueryWrapper<>();
-        // 按创建时间降序排列，最新创建的排在前面
+
         queryWrapper.orderByDesc(Event::getDate);
 
-        // 查询数据库
+
         return this.list(queryWrapper);
     }
 
     @Override
     public IPage<Event> getActivityListPage(Page<Event> page) {
-        // 创建查询条件
+
         LambdaQueryWrapper<Event> queryWrapper = new LambdaQueryWrapper<>();
-        // 按创建时间降序排列
+
         queryWrapper.orderByDesc(Event::getDate);
 
-        // 执行分页查询
+
         return this.page(page, queryWrapper);
     }
 
     @Override
     public Event getActivityById(Long id) {
-        // 查询活动
+
         return this.getById(id);
     }
 }

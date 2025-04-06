@@ -3,39 +3,39 @@ package com.comp9900.proj_15.common;
 import lombok.Data;
 
 /**
- * 统一响应结构
+ * Unified response structure
  */
 @Data
 public class R<T> {
 
     /**
-     * 状态码
+     * Status code
      */
     private Integer code;
 
     /**
-     * 消息
+     * Message
      */
     private String message;
 
     /**
-     * 数据
+     * Data
      */
     private T data;
 
     /**
-     * 成功响应
+     * Success response
      */
     public static <T> R<T> success(T data) {
         R<T> r = new R<>();
         r.setCode(200);
-        r.setMessage("操作成功");
+        r.setMessage("Operation successful");
         r.setData(data);
         return r;
     }
 
     /**
-     * 成功响应（自定义消息）
+     * Success response (custom message)
      */
     public static <T> R<T> success(String message, T data) {
         R<T> r = new R<>();
@@ -46,7 +46,7 @@ public class R<T> {
     }
 
     /**
-     * 失败响应
+     * Error response
      */
     public static <T> R<T> error(String message) {
         R<T> r = new R<>();
@@ -56,7 +56,7 @@ public class R<T> {
     }
 
     /**
-     * 失败响应（自定义状态码）
+     * Error response (custom status code)
      */
     public static <T> R<T> error(Integer code, String message) {
         R<T> r = new R<>();

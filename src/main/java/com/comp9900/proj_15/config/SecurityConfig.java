@@ -19,7 +19,7 @@ import com.comp9900.proj_15.security.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用 @PreAuthorize 和 @PostAuthorize
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Enable @PreAuthorize and @PostAuthorize
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    // 先定义PasswordEncoder，避免循环依赖
+    // Define PasswordEncoder first to avoid circular dependency
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new PasswordEncoder() {
@@ -44,13 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    // 将AuthenticationManagerBuilder配置移到configure方法中
+    // Move AuthenticationManagerBuilder configuration to configure method
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    // 定义AuthenticationManager Bean
+    // Define AuthenticationManager Bean
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -62,13 +62,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/user/login", "/user/register").permitAll()
+//                .antMatchers("/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // 添加JWT过滤器
+        // Add JWT filter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

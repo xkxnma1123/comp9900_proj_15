@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ *  Service Class
  * </p>
  *
  * @author comp9900_proj15
@@ -18,22 +18,22 @@ import java.util.List;
  */
 public interface EventService extends IService<Event> {
     /**
-     * 获取活动列表
-     * @return 活动列表
+     * Get event list
+     * @return Event list
      */
     List<Event> getActivityList();
 
     /**
-     * 分页获取活动列表
-     * @param page 分页参数
-     * @return 分页活动列表
+     * Get paginated event list
+     * @param page Pagination parameters
+     * @return Paginated event list
      */
     IPage<Event> getActivityListPage(Page<Event> page);
 
     /**
-     * 根据ID获取活动详情
-     * @param id 活动ID
-     * @return 活动详情
+     * Get event details by ID
+     * @param id Event ID
+     * @return Event details
      */
     Event getActivityById(Long id);
 }

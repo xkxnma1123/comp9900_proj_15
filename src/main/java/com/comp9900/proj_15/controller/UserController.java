@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 /**
  * <p>
- *  前端控制器
+ *  Frontend Controller
  * </p>
  *
  * @author comp9900_proj15
@@ -42,49 +42,38 @@ public class UserController {
 
 
     @Autowired
-    private JwtUtil jwtUtil;  // 注入JwtUtil
+    private JwtUtil jwtUtil;  // Inject JwtUtil
 
     /**
-<<<<<<< Updated upstream
-     * 用户注册
-     * @param params 包含用户信息的参数
-     * @return 注册结果
+     * User registration
+     * @param params Parameters containing user information
+     * @return Registration result
      */
     @PostMapping("/register")
     public R<Map<String, Object>> register(@RequestBody Map<String, String> params) {
         System.out.println("Register endpoint called with params: " + params);
         
-        // 参数校验
+        // Parameter validation
         if (params.get("name") == null || params.get("name").trim().isEmpty()) {
-            return R.error("用户名不能为空");
+            return R.error("Username cannot be empty");
         }
         if (params.get("email") == null || params.get("email").trim().isEmpty()) {
-            return R.error("邮箱不能为空");
+            return R.error("Email cannot be empty");
         }
         if (params.get("password") == null || params.get("password").trim().isEmpty()) {
-            return R.error("密码不能为空");
+            return R.error("Password cannot be empty");
         }
         if (params.get("level_of_study") == null || params.get("level_of_study").trim().isEmpty()) {
-            return R.error("学习层次不能为空");
+            return R.error("Level of study cannot be empty");
         }
         
-//        try {
-//            // 注册用户
-//            Map<String, Object> userMap = userService.register(
-//                params.get("name"),
-//                params.get("email"),
-//                params.get("level_of_study"),
-//                params.get("password")
-//            );
         try {
-
             User user = new User();
-            // 设置所有字段，直接从参数获取
+            // Set all fields directly from parameters
             user.setName(params.get("name"));
             user.setEmail(params.get("email"));
             user.setLevelOfStudy(params.get("level_of_study"));
-            user.setPasswordHash(params.get("password")); // 在service层会进行MD5加密
-            //user.setUserType(params.get("user_type"));
+            user.setPasswordHash(params.get("password")); // MD5 encryption will be performed in service layer
             user.setUserCity(params.get("userCity"));
             user.setUserCountry(params.get("userCountry"));
             user.setUserField(params.get("userField"));
@@ -92,39 +81,19 @@ public class UserController {
             user.setUserRegions(params.get("userRegions"));
             user.setUserUni(params.get("userUni"));
 
-
-            // 注册用户
+            // Register user
             Map<String, Object> userMap = userService.register(user);
-
-//            // 生成JWT Token - 确保不为null
-//            if (userMap != null) {
-//                String token = jwtUtil.generateToken(userMap);
-//                // 将token添加到返回结果中
-//                userMap.put("token", token);
-//            }
-            return R.success("注册成功", userMap);
+            return R.success("Registration successful", userMap);
         } catch (Exception e) {
             e.printStackTrace();
             return R.error(e.getMessage());
         }
     }
 
-//    /**
-//     * 更新用户信息（包含地址信息）
-//     */
-//    @PutMapping("/register/{id}")
-//    public R<User> profileAfterRegister(
-//            @PathVariable Integer id,
-//            @RequestBody User user) {
-//        user.setId(id); // 确保ID正确设置
-//        User updatedUser = userService.updateUser(user);
-//        return R.success("用户信息更新成功", updatedUser);
-//    }
-
     /**
-     * 用户登录
-     * @param params 包含登录信息的参数
-     * @return 登录结果
+     * User login
+     * @param params Parameters containing login information
+     * @return Login result
      */
     @PostMapping("/login")
     public R<Map<String, Object>> login(@RequestBody Map<String, String> params) {
@@ -133,65 +102,40 @@ public class UserController {
         String email = params.get("email");
         String password = params.get("password");
 
-        // 参数校验
+        // Parameter validation
         if (email == null || email.trim().isEmpty()) {
-            return R.error("邮箱不能为空");
+            return R.error("Email cannot be empty");
         }
         if (password == null || password.trim().isEmpty()) {
-            return R.error("密码不能为空");
+            return R.error("Password cannot be empty");
         }
 
         try {
-            // 登录
+            // Login
             Map<String, Object> userMap = userService.login(email, password);
 
-            // 生成JWT Token - 确保不为null
+            // Generate JWT Token - ensure not null
             if (userMap != null) {
                 String token = jwtUtil.generateToken(userMap);
-                // 将token添加到返回结果中
+                // Add token to return result
                 userMap.put("token", token);
             }
 
-            return R.success("登录成功", userMap);
+            return R.success("Login successful", userMap);
         } catch (Exception e) {
             e.printStackTrace();
             return R.error(e.getMessage());
         }
     }
-//    public R<Map<String, Object>> login(@RequestBody Map<String, String> params) {
-//        System.out.println("Login endpoint called with params: " + params);
-//
-//        String email = params.get("email");
-//        String password = params.get("password");
-//
-//        // 参数校验
-//        if (email == null || email.trim().isEmpty()) {
-//            return R.error("邮箱不能为空");
-//        }
-//        if (password == null || password.trim().isEmpty()) {
-//            return R.error("密码不能为空");
-//        }
-//
-//        try {
-//            // 登录
-//            Map<String, Object> userMap = userService.login(email, password);
-//            return R.success("登录成功", userMap);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return R.error(e.getMessage());
-//        }
-//    }
     
     /**
-     * 测试接口
+     * Test endpoint
      */
     @GetMapping("/test")
     public String test() {
-        return "UserController 工作正常";
+        return "UserController is working properly";
     }
 
-//     * 获取所有国家列表
-//     */
     @GetMapping("/locations/countries")
     public R<List<Map<String, Object>>> getAllCountries() {
         List<Map<String, Object>> countries = userService.getAllCountries();
@@ -199,7 +143,7 @@ public class UserController {
     }
 
     /**
-     * 根据国家代码获取省份/地区列表
+     * Get provinces/regions list by country code
      */
     @GetMapping("/locations/regions")
     public R<List<Map<String, Object>>> getRegionsByCountry(@RequestParam String countryCode) {
@@ -208,7 +152,7 @@ public class UserController {
     }
 
     /**
-     * 根据国家代码和地区代码获取城市列表
+     * Get cities list by country code and region code
      */
     @GetMapping("/locations/cities")
     public R<List<Map<String, Object>>> getCitiesByRegion(
@@ -218,71 +162,61 @@ public class UserController {
         return R.success(cities);
     }
 
-//    /**
-//     * 注册新用户（包含地址信息）
-//     */
-//    @PostMapping("/register")
-//    public R<User> registerUser(@RequestBody User user) {
-//        User registeredUser = userService.registerUser(user);
-//        return R.success("用户注册成功", registeredUser);
-//    }
-
     /**
-     * 更新用户信息（包含地址信息）
+     * Update user information (including address information)
      */
     @PutMapping("/{id}")
     @PreAuthorize("authentication.principal.username == #id.toString() or hasRole('ADMIN')")
     public R<User> updateUser(
             @PathVariable Integer id,
             @RequestBody User user) {
-        user.setId(id); // 确保ID正确设置
+        user.setId(id); // Ensure ID is correctly set
         User updatedUser = userService.updateUser(user);
-        return R.success("用户信息更新成功", updatedUser);
+        return R.success("User information updated successfully", updatedUser);
     }
 
-
     /**
-     * 根据条件随机分页查询用户
+     * Random pagination query of users based on conditions
      *
-     * @param current 当前页
-     * @param size 每页大小
-     * @param field 专业领域
-     * @param university 大学
-     * @param city 城市
-     * @return 分页结果
+     * @param current Current page
+     * @param size Page size
+     * @param field Professional field
+     * @param university University
+     * @param city City
+     * @return Pagination result
      */
     @GetMapping("/randomPage")
-    @ApiOperation("根据条件随机分页查询用户")
+    @ApiOperation("Random pagination query of users based on conditions")
     public R<Page<User>> randomPageByConditions(
-            @ApiParam(value = "当前页", required = true) @RequestParam(defaultValue = "1") Long current,
-            @ApiParam(value = "每页大小", required = true) @RequestParam(defaultValue = "10") Long size,
-            @ApiParam(value = "专业领域") @RequestParam(required = false) String field,
-            @ApiParam(value = "大学") @RequestParam(required = false) String university,
-            @ApiParam(value = "城市") @RequestParam(required = false) String city) {
+            @ApiParam(value = "Current page", required = true) @RequestParam(defaultValue = "1") Long current,
+            @ApiParam(value = "Page size", required = true) @RequestParam(defaultValue = "10") Long size,
+            @ApiParam(value = "Professional field") @RequestParam(required = false) String field,
+            @ApiParam(value = "University") @RequestParam(required = false) String university,
+            @ApiParam(value = "City") @RequestParam(required = false) String city) {
 
-        // 创建分页对象
+        // Create pagination object
         Page<User> page = new Page<>(current, size);
 
-        // 调用Service进行随机分页查询
+        // Call Service for random pagination query
         Page<User> resultPage = userService.randomPageByConditions(page, field, university, city);
 
         return R.success(resultPage);
     }
 
     /**
-     * 获取用户的城市、大学和专业字段信息
-     * @param userId 用户ID
-     * @return 包含用户城市、大学和专业字段的响应
+     * Get user's city, university and professional field information
+     * @param userId User ID
+     * @return Response containing user's city, university and professional field
      */
     @GetMapping("/peerMatchInfo/{userId}")
     @PreAuthorize("authentication.principal.username == #id.toString() or hasRole('ADMIN')")
     public R<Map<String, String>> getUserInfo(@PathVariable Integer userId) {
         try {
             Map<String, String> userInfo = userService.getUserPeerMatchInfo(userId);
-            return R.success("获取用户信息成功", userInfo);
+            return R.success("User information retrieved successfully", userInfo);
         } catch (Exception e) {
             e.printStackTrace();
-            return R.error("获取用户信息失败: " + e.getMessage());
+            return R.error("Failed to get user information: " + e.getMessage());
         }
     }
 

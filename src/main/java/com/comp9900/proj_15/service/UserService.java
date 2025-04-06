@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户服务接口
+ * User Service Interface
  */
 
 //public interface UserService {
@@ -22,27 +22,27 @@ public interface UserService extends IService<User> {
 
 
     /**
-     * 用户注册
+     * User registration
      */
     Map<String, Object> register(User user);
 
     /**
-     * 用户登录
+     * User login
      */
     Map<String, Object> login(String email, String password);
 
     /**
-     * 获取所有国家列表
+     * Get all countries list
      */
     List<Map<String, Object>> getAllCountries();
 
     /**
-     * 根据国家代码获取地区/省份列表
+     * Get regions/provinces list by country code
      */
     List<Map<String, Object>> getRegionsByCountry(String countryCode);
 
     /**
-     * 根据国家代码和地区代码获取城市列表
+     * Get cities list by country code and region code
      */
     List<Map<String, Object>> getCitiesByRegion(String countryCode, String regionCode);
 
@@ -52,27 +52,27 @@ public interface UserService extends IService<User> {
 //    User registerUser(User user);
 
     /**
-     * 更新用户信息
+     * Update user information
      */
     User updateUser(User user);
 
 
 
     /**
-     * 根据条件随机分页查询用户
+     * Random pagination query of users based on conditions
      *
-     * @param page 分页对象
-     * @param field 专业领域
-     * @param university 大学
-     * @param city 城市
-     * @return 分页结果
+     * @param page Pagination object
+     * @param field Professional field
+     * @param university University
+     * @param city City
+     * @return Pagination result
      */
     public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city);
 
     /**
-     * 获取用户的位置和教育相关信息
-     * @param userId 用户ID
-     * @return 包含用户城市、大学和专业字段的Map
+     * Get user's location and education related information
+     * @param userId User ID
+     * @return Map containing user's city, university and professional field
      */
     Map<String, String> getUserPeerMatchInfo(Integer userId);
 }

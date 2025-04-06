@@ -15,17 +15,17 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    // 如果配置属性没有注入，提供默认值
+    // Provide default value if configuration property is not injected
     @Value("${jwt.secret:defaultSecretKeyWhichIsLongEnoughForHS256Signature}")
     private String secret;
 
-    // 默认过期时间设为24小时（以秒为单位）
+    // Default expiration time set to 24 hours (in seconds)
     @Value("${jwt.expiration:86400}")
     private Long expiration;
 
-    // 生成token方法，适合从Map生成token
+    // Generate token method, suitable for generating token from Map
     public String generateToken(Map<String, Object> userMap) {
-        // 安全检查及默认值设置
+        // Security check and default value setting
         Long userId = null;
         if (userMap.get("id") != null) {
             if (userMap.get("id") instanceof Number) {
@@ -34,7 +34,7 @@ public class JwtUtil {
                 try {
                     userId = Long.parseLong(userMap.get("id").toString());
                 } catch (Exception e) {
-                    // 转换失败，保持userId为null
+                    // Conversion failed, keep userId as null
                 }
             }
         }
@@ -42,7 +42,7 @@ public class JwtUtil {
         String email = userMap.get("email") != null ? userMap.get("email").toString() : "";
         String userType = userMap.get("user_type") != null ? userMap.get("user_type").toString() : "normal";
 
-        // 生成token
+        // Generate token
         return Jwts.builder()
                 .setSubject(userId != null ? userId.toString() : "unknown")
                 .claim("email", email)

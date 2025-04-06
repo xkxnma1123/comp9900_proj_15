@@ -17,45 +17,45 @@ import java.util.Map;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserMapper userMapper; // 假设你有这个Mapper
+    private UserMapper userMapper; // Assume you have this Mapper
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            // 尝试将username解析为用户ID
+            // Try to parse username as user ID
             Long userId = Long.parseLong(username);
 
-            // 通过ID查找用户
+            // Find user by ID
             Map<String, Object> userMap = userMapper.findUserById(userId);
 
             if (userMap == null || userMap.isEmpty()) {
                 throw new UsernameNotFoundException("User not found with id: " + userId);
             }
 
-            // 从Map中提取数据
+            // Extract data from Map
             String email = (String) userMap.get("email");
             String password = (String) userMap.get("password");
             String role = userMap.getOrDefault("user_type", "normal").toString();
 
-            // 创建并返回UserDetails对象
+            // Create and return UserDetails object
             return new User(
-                    username, // 使用ID作为username
+                    username, // Use ID as username
                     password,
                     Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
             );
         } catch (NumberFormatException e) {
-            // 如果无法解析为ID，尝试通过邮箱查找（向后兼容）
+            // If cannot parse as ID, try to find by email (backward compatibility)
             Map<String, Object> userMap = userMapper.findUserByEmail(username);
 
             if (userMap == null || userMap.isEmpty()) {
                 throw new UsernameNotFoundException("User not found with email: " + username);
             }
 
-            // 从Map中提取数据
+            // Extract data from Map
             String password = (String) userMap.get("password");
             String role = userMap.getOrDefault("user_type", "normal").toString();
 
-            // 创建并返回UserDetails对象
+            // Create and return UserDetails object
             return new User(
                     username,
                     password,
