@@ -4,14 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.comp9900.proj_15.entity.UserEvent">
-        <id column="UID" property="uid" />
+        <id column="txn_id" property="txnID" />
         <result column="EID" property="eid" />
+        <result column="UID" property="uid" />
         <result column="Status" property="status" />
+        <result column="check_flag" property="checkFlag" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        UID, EID, Status
+        txnID, UID, EID, Status, check_flag
     </sql>
 
 </mapper>

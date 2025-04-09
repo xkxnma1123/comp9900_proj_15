@@ -67,6 +67,17 @@ public class User extends Model<User> {
     @TableField("User_Uni")
     private String userUni;
 
+    @TableField("email_verified")
+    private Integer emailVerified;
+
+    @TableField("User_icon")
+    private String userIcon;
+
+    @TableField("coin")
+    private Integer coin;
+
+
+
     public static final String ID = "ID";
 
     public static final String NAME = "Name";
@@ -92,6 +103,12 @@ public class User extends Model<User> {
     public static final String USER_REGIONS = "User_Regions";
 
     public static final String USER_UNI = "User_Uni";
+
+    public static final String EMAIL_VERIFIED = "email_verified";
+
+    public static final String USER_ICON = "User_icon";
+
+    public static final String COIN = "coin";
     
 
     @Override

@@ -75,5 +75,19 @@ public interface UserService extends IService<User> {
      * @return Map containing user's city, university and professional field
      */
     Map<String, String> getUserPeerMatchInfo(Integer userId);
+
+    User getUserById(Integer id);
+
+
+    /**
+     * 更新用户邮箱验证状态
+     */
+    boolean updateEmailVerificationStatus(String email, int verifiedStatus);
+
+    /**
+     * 检查邮箱是否已注册
+     */
+    boolean existsByEmail(String email);
 }
+
 

@@ -26,20 +26,31 @@ public class UserEvent extends Model<UserEvent> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("UID")
-    private Integer uid;
+    @TableId("txn_id")
+    private Integer txnID;
 
     @TableField("EID")
     private Integer eid;
 
+
+    @TableField("UID")
+    private Integer uid;
+
+
     @TableField("Status")
     private String status;
+
+    @TableField("check_flag")
+    private boolean checkFlag;
+
+
 
     public static final String UID = "UID";
 
     public static final String EID = "EID";
 
     public static final String STATUS = "Status";
+
 
     @Override
     public Serializable pkVal() {

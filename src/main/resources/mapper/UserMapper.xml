@@ -17,16 +17,19 @@
         <result column="User_Language" property="userLanguage" />
         <result column="User_Regions" property="userRegions" />
         <result column="User_Uni" property="userUni" />
+        <result column="User_icon" property="userIcon" />
+        <result column="Email_verified" property="emailVerified" />
+        <result column="coin" property="coin" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ID, Name, Level_of_study, Email, Password_hash, Created_at, User_Type, User_city, User_country, User_Field, User_Language, User_Regions, User_Uni
+        ID, Name, Level_of_study, Email, Password_hash, Created_at, User_Type, User_city, User_country, User_Field, User_Language, User_Regions, User_Uni,User_icon, Email_verified, coin
     </sql>
 
 
     <select id="findUserById" resultType="java.util.Map">
-        SELECT id, name, email, level_of_study, created_at, user_type, password_hash as password, user_city, user_country, user_field, user_language, user_regions, user_uni
+        SELECT id, name, email, level_of_study, created_at, user_type, password_hash as password, user_city, user_country, user_field, user_language, user_regions, user_uni, user_icon
         FROM User
         WHERE id = #{id}
     </select>

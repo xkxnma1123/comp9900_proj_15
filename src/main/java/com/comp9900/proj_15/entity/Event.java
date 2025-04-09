@@ -26,6 +26,7 @@ import lombok.Setter;
 @ApiModel(value = "Event对象", description = "")
 public class Event extends Model<Event> {
 
+
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "ID", type = IdType.AUTO)
@@ -46,6 +47,9 @@ public class Event extends Model<Event> {
     @TableField("External_Link")
     private String externalLink;
 
+    @TableField("coin")
+    private Integer coin;
+
     public static final String ID = "ID";
 
     public static final String TITLE = "Title";
@@ -57,6 +61,8 @@ public class Event extends Model<Event> {
     public static final String IMG = "IMG";
 
     public static final String EXTERNAL_LINK = "External_Link";
+
+    public static final String COIN = "coin";
 
     @Override
     public Serializable pkVal() {

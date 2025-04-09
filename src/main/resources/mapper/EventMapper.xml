@@ -10,11 +10,12 @@
         <result column="Description" property="description" />
         <result column="IMG" property="img" />
         <result column="External_Link" property="externalLink" />
+        <result column="coin" property="coin" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ID, Title, Date, Description, IMG, External_Link
+        ID, Title, Date, Description, IMG, External_Link, coin
     </sql>
 
 </mapper>

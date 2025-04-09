@@ -3,6 +3,7 @@ package com.comp9900.proj_15.controller;
 
 import com.comp9900.proj_15.common.R;
 import com.comp9900.proj_15.service.UserService;
+import com.comp9900.proj_15.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import com.comp9900.proj_15.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Map;
 /**
@@ -39,6 +41,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private VerificationService verificationService;
 
 
     @Autowired
@@ -87,6 +92,78 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             return R.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 发验证码
+     * @param params 包含邮箱的参数
+     * @return 发送结果
+     */
+    @PostMapping("/register/sendVerifyCode")
+    @PermitAll
+    public R<String> sendVerificationCode(@RequestBody Map<String, String> params) {
+        System.out.println("Resend verification code endpoint called with params: " + params);
+
+        String email = params.get("email");
+
+        // 参数校验
+        if (email == null || email.trim().isEmpty()) {
+            return R.error("邮箱不能为空");
+        }
+
+        try {
+            // 检查邮箱是否存在
+            if (userService.existsByEmail(email)) {
+                return R.error("该邮箱已注册");
+            }
+
+            // 重发验证码
+            verificationService.sendVerificationCode(email);
+
+            return R.success("验证码已经发送到您的邮箱");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("发送验证码失败: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/register/verifyCode")
+    @PermitAll
+    public R<String> verifyCode(@RequestBody Map<String, String> params) {
+        System.out.println("Verify endpoint called with params: " + params);
+
+        String email = params.get("email");
+        String code = params.get("code");
+
+        // 参数校验
+        if (email == null || email.trim().isEmpty()) {
+            return R.error("邮箱不能为空");
+        }
+        if (code == null || code.trim().isEmpty()) {
+            return R.error("验证码不能为空");
+        }
+
+        try {
+            // 检查邮箱是否存在
+            if (userService.existsByEmail(email)) {
+                return R.error("该邮箱已被注册");
+            }
+
+            // 验证验证码
+            boolean isValid = verificationService.verifyCode(email, code);
+
+            if (!isValid) {
+                return R.error("验证码无效或已过期");
+            }
+
+            // 更新用户邮箱验证状态
+            userService.updateEmailVerificationStatus(email, 1);
+
+            return R.success("邮箱验证成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("验证失败: " + e.getMessage());
         }
     }
 
@@ -218,6 +295,26 @@ public class UserController {
             e.printStackTrace();
             return R.error("Failed to get user information: " + e.getMessage());
         }
+    }
+
+    /**
+     * Get a user's complete information by their ID
+     *
+     * @param id The ID of the user to retrieve
+     * @return R containing the user information
+     */
+    @GetMapping("/{id}")
+    public R<User> getCurrentUserInfo(@PathVariable Integer id) {
+        // Get user by ID
+        User user = userService.getUserById(id);
+
+        // Check if user exists
+        if (user == null) {
+            return R.error("User not found");
+        }
+
+        // Return user information
+        return R.success(user);
     }
 
 }

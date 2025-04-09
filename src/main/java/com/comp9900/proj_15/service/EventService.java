@@ -1,22 +1,19 @@
 package com.comp9900.proj_15.service;
 
-import com.comp9900.proj_15.entity.Event;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
+import com.comp9900.proj_15.entity.Event;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.comp9900.proj_15.entity.UserEvent;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * <p>
- *  Service Class
- * </p>
- *
- * @author comp9900_proj15
- * @since 2025-03-21
+ * Service Class
  */
 public interface EventService extends IService<Event> {
+
     /**
      * Get event list
      * @return Event list
@@ -36,4 +33,19 @@ public interface EventService extends IService<Event> {
      * @return Event details
      */
     Event getActivityById(Long id);
+
+    Map<String, Object> getActivityWithParticipants(Long id);
+
+
+
+    /**
+     * Check if a user is in another user's friends list
+     *
+     * @param currentUserId The user to check
+     * @param myUserId The logged-in user's ID
+     * @return Map containing user info and friendship status
+     */
+    Map<String, Object> checkUserFriendship(Integer currentUserId, Integer myUserId);
+
+
 }

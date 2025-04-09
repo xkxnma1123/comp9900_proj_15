@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -54,12 +55,49 @@ public class EventController {
      * @param id Event ID
      * @return Event details
      */
+//    @GetMapping("/detail/{id}")
+//    public R<Event> getActivityDetail(@PathVariable Long id) {
+//        Event activity = eventService.getActivityById(id);
+//        if (activity == null) {
+//            return R.error("Event does not exist");
+//        }
+//        return R.success(activity);
+//    }
     @GetMapping("/detail/{id}")
-    public R<Event> getActivityDetail(@PathVariable Long id) {
-        Event activity = eventService.getActivityById(id);
-        if (activity == null) {
+    public R<Map<String, Object>> getActivityDetail(@PathVariable Long id) {
+        Map<String, Object> result = eventService.getActivityWithParticipants(id);
+        if (result == null) {
             return R.error("Event does not exist");
         }
-        return R.success(activity);
+        return R.success(result);
     }
+
+
+    /**
+     * Check if a user is in the logged-in user's friend list
+     *
+     * @param currentUserId The user ID to check
+     * @param myUserId The logged-in user's ID
+     * @return User info with friendship status
+     */
+    @PostMapping("/attendanceList")
+    public R<Map<String, Object>> checkUserFriendship(@RequestBody Map<String, Integer> params) {
+        Integer eventId = params.get("eventId");
+        Integer myUserId = params.get("myUserId");
+
+        if (eventId == null || myUserId == null) {
+            return R.error("Missing required parameters");
+        }
+
+        Map<String, Object> result = eventService.checkUserFriendship(eventId, myUserId);
+
+        if (result == null) {
+            return R.error("User does not exist");
+        }
+
+        return R.success(result);
+    }
+
+
+
 }

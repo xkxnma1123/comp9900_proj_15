@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public interface UserMapper extends BaseMapper<User> {
      * 查询用户信息但不包含密码
      */
     @Select("SELECT id, name, email, level_of_study, created_at, user_type, user_city, user_country, " +
-            "user_field, user_language, user_regions, user_uni " +
+            "user_field, user_language, user_regions, user_uni, email_verified " +
             "FROM User WHERE email = #{email}")
     Map<String, Object> findUserByEmail(@Param("email") String email);
     
@@ -100,6 +101,14 @@ public interface UserMapper extends BaseMapper<User> {
             + "</foreach>"
             + "</script>")
     List<User> selectByIds(@Param("ids") List<Integer> ids);
+
+
+    /**
+     * 更新用户邮箱验证状态
+     */
+    @Update("UPDATE User SET email_verified = #{verifiedStatus} WHERE email = #{email}")
+    int updateEmailVerificationStatus(@Param("email") String email, @Param("verifiedStatus") int verifiedStatus);
+
 
 }
 

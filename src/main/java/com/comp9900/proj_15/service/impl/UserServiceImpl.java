@@ -7,6 +7,7 @@ import com.comp9900.proj_15.entity.User;
 
 import com.comp9900.proj_15.mapper.UserMapper;
 import com.comp9900.proj_15.service.UserService;
+import com.comp9900.proj_15.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private VerificationService verificationService;
 
 //    @Override
 //    public Map<String, Object> register (String name, String email, String levelOfStudy, String password){
@@ -136,6 +140,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         if (user == null || user.isEmpty()) {
             throw new RuntimeException("Failed to get user information");
+        }
+
+        // 打印整个用户对象，查看所有字段
+        // System.out.println("用户数据: " + user);
+
+        // 特别检查email_verified字段
+        Object verifiedObj = user.get("email_verified");
+        // System.out.println("邮箱验证状态: " + verifiedObj + ", 类型: " + (verifiedObj != null ? verifiedObj.getClass().getName() : "null"));
+
+
+        boolean isVerified = false;
+
+        if (verifiedObj instanceof Boolean) {
+            isVerified = (Boolean) verifiedObj;
+        } else if (verifiedObj instanceof Number) {
+            isVerified = ((Number) verifiedObj).intValue() == 1;
+        } else if (verifiedObj instanceof String) {
+            isVerified = "1".equals(verifiedObj) || "true".equalsIgnoreCase((String) verifiedObj);
+        }
+
+        if (!isVerified) {
+            throw new RuntimeException("请先验证您的邮箱再登录");
         }
 
         return user;
@@ -342,6 +368,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userInfo.put("userField", user.getUserField());
 
         return userInfo;
+    }
+
+    @Override
+    public User getUserById(Integer id) {
+        return this.getById(id);
+    }
+
+    @Override
+    public boolean updateEmailVerificationStatus(String email, int verifiedStatus) {
+        return userMapper.updateEmailVerificationStatus(email, verifiedStatus) > 0;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userMapper.countByEmail(email) > 0;
     }
 }
 
