@@ -35,4 +35,9 @@ public interface FriendsService extends IService<Friends> {
      * Get friend list
      */
     List<Map<String, Object>> getFriends(Integer userId);
+
+    /**
+     * Get friend list
+     */
+    List<Map<String, Object>> getFriendsStatus(Integer userId);
 }

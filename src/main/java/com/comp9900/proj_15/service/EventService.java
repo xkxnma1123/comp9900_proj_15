@@ -18,7 +18,7 @@ public interface EventService extends IService<Event> {
      * Get event list
      * @return Event list
      */
-    List<Event> getActivityList();
+    List<Event> getActivityList(Integer userId);
 
     /**
      * Get paginated event list
@@ -34,7 +34,7 @@ public interface EventService extends IService<Event> {
      */
     Event getActivityById(Long id);
 
-    Map<String, Object> getActivityWithParticipants(Long id);
+    Map<String, Object> getActivityWithParticipants(Long id, Integer userId);
 
 
 

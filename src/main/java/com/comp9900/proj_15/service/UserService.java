@@ -67,7 +67,7 @@ public interface UserService extends IService<User> {
      * @param city City
      * @return Pagination result
      */
-    public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city);
+    public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city, int userID);
 
     /**
      * Get user's location and education related information
@@ -82,7 +82,7 @@ public interface UserService extends IService<User> {
     /**
      * 更新用户邮箱验证状态
      */
-    boolean updateEmailVerificationStatus(String email, int verifiedStatus);
+//    boolean updateEmailVerificationStatus(String email, int verifiedStatus);
 
     /**
      * 检查邮箱是否已注册

@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -49,6 +51,10 @@ public class Event extends Model<Event> {
 
     @TableField("coin")
     private Integer coin;
+
+    @TableField(exist = false)  // 告诉MyBatis-Plus这个字段不存在于数据库表中
+    @JsonInclude(JsonInclude.Include.NON_NULL)  // 当字段为null时不序列化
+    private String status;
 
     public static final String ID = "ID";
 

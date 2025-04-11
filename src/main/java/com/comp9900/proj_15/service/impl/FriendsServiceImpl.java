@@ -89,4 +89,10 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
     public List<Map<String, Object>> getFriends(Integer userId) {
         return friendsMapper.getFriends(userId);
     }
+
+
+    @Override
+    public List<Map<String, Object>> getFriendsStatus(Integer userId) {
+        return friendsMapper.getFriendsStatus(userId);
+    }
 }

@@ -59,18 +59,18 @@ public class UserController {
         System.out.println("Register endpoint called with params: " + params);
         
         // Parameter validation
-        if (params.get("name") == null || params.get("name").trim().isEmpty()) {
-            return R.error("Username cannot be empty");
-        }
-        if (params.get("email") == null || params.get("email").trim().isEmpty()) {
-            return R.error("Email cannot be empty");
-        }
-        if (params.get("password") == null || params.get("password").trim().isEmpty()) {
-            return R.error("Password cannot be empty");
-        }
-        if (params.get("level_of_study") == null || params.get("level_of_study").trim().isEmpty()) {
-            return R.error("Level of study cannot be empty");
-        }
+//        if (params.get("name") == null || params.get("name").trim().isEmpty()) {
+//            return R.error("Username cannot be empty");
+//        }
+//        if (params.get("email") == null || params.get("email").trim().isEmpty()) {
+//            return R.error("Email cannot be empty");
+//        }
+//        if (params.get("password") == null || params.get("password").trim().isEmpty()) {
+//            return R.error("Password cannot be empty");
+//        }
+//        if (params.get("level_of_study") == null || params.get("level_of_study").trim().isEmpty()) {
+//            return R.error("Level of study cannot be empty");
+//        }
         
         try {
             User user = new User();
@@ -158,7 +158,7 @@ public class UserController {
             }
 
             // 更新用户邮箱验证状态
-            userService.updateEmailVerificationStatus(email, 1);
+            //userService.updateEmailVerificationStatus(email, 1);
 
             return R.success("邮箱验证成功");
         } catch (Exception e) {
@@ -269,13 +269,14 @@ public class UserController {
             @ApiParam(value = "Page size", required = true) @RequestParam(defaultValue = "10") Long size,
             @ApiParam(value = "Professional field") @RequestParam(required = false) String field,
             @ApiParam(value = "University") @RequestParam(required = false) String university,
-            @ApiParam(value = "City") @RequestParam(required = false) String city) {
+            @ApiParam(value = "City") @RequestParam(required = false) String city,
+            @ApiParam(value = "userId") @RequestParam(required = false) Integer userId){
 
         // Create pagination object
         Page<User> page = new Page<>(current, size);
 
         // Call Service for random pagination query
-        Page<User> resultPage = userService.randomPageByConditions(page, field, university, city);
+        Page<User> resultPage = userService.randomPageByConditions(page, field, university, city, userId);
 
         return R.success(resultPage);
     }

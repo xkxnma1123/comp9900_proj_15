@@ -28,12 +28,15 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+
+
     /**
-     * @return Event list
+     * @param userId 用户ID
+     * @return Event list with status
      */
     @GetMapping("/list")
-    public R<List<Event>> getActivityList() {
-        List<Event> list = eventService.getActivityList();
+    public R<List<Event>> getActivityList(@RequestParam Integer userId) {
+        List<Event> list = eventService.getActivityList(userId);
         return R.success(list);
     }
 
@@ -64,8 +67,8 @@ public class EventController {
 //        return R.success(activity);
 //    }
     @GetMapping("/detail/{id}")
-    public R<Map<String, Object>> getActivityDetail(@PathVariable Long id) {
-        Map<String, Object> result = eventService.getActivityWithParticipants(id);
+    public R<Map<String, Object>> getActivityDetail(@PathVariable Long id, @RequestParam Integer userId) {
+        Map<String, Object> result = eventService.getActivityWithParticipants(id, userId);
         if (result == null) {
             return R.error("Event does not exist");
         }

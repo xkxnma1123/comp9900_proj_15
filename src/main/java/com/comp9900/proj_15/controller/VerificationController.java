@@ -63,7 +63,7 @@ public class VerificationController {
             }
             
             // 更新用户邮箱验证状态
-            userService.updateEmailVerificationStatus(email, 1);
+            //userService.updateEmailVerificationStatus(email, 1);
             
             return R.success("邮箱验证成功");
         } catch (Exception e) {

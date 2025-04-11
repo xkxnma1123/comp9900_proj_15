@@ -25,6 +25,14 @@ public interface FriendsMapper extends BaseMapper<Friends> {
             "FROM Friends f JOIN User u ON f.Friend_ID = u.ID " +
             "WHERE f.UID = #{userId} AND f.Status = 'accept'")
     List<Map<String, Object>> getFriends(@Param("userId") Integer userId);
+
+    /**
+     * 获取所有好友
+     */
+    @Select("SELECT f.UID, f.Friend_ID,f.Status, u.name as friend_name, u.email as friend_email " +
+            "FROM Friends f JOIN User u ON f.Friend_ID = u.ID " +
+            "WHERE f.UID = #{userId} AND f.Status = 'accept'")
+    List<Map<String, Object>> getFriendsStatus(@Param("userId") Integer userId);
     
     /**
      * 检查好友请求是否已存在
