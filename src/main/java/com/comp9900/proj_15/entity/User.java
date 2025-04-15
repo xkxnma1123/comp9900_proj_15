@@ -109,6 +109,7 @@ public class User extends Model<User> {
     public static final String USER_ICON = "User_icon";
 
     public static final String COIN = "coin";
+
     
 
     @Override

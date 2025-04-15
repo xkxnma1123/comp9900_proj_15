@@ -1,6 +1,4 @@
 package com.comp9900.proj_15.controller;
-
-
 import com.comp9900.proj_15.entity.Message;
 import com.comp9900.proj_15.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
