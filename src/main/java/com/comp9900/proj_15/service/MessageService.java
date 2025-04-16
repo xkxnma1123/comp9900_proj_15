@@ -4,6 +4,8 @@ import com.comp9900.proj_15.entity.Message;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  *  Service Class
@@ -27,4 +29,6 @@ public interface MessageService extends IService<Message> {
      * @return Message list
      */
     List<Message> getMessagesBetweenUsers(Integer senderId, Integer receiverId);
+
+    List<Map<String, Object>> getLatestMessagesWithContacts(Integer userId);
 }

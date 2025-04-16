@@ -3,6 +3,10 @@ package com.comp9900.proj_15.mapper;
 import com.comp9900.proj_15.entity.Message;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,5 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
+    List<Map<String, Object>> findLatestMessagesWithContacts(@Param("userId") Integer userId);
 
 }

@@ -12,6 +12,38 @@
         <result column="read" property="read" />
     </resultMap>
 
+    <select id="findLatestMessagesWithContacts" resultType="java.util.Map">
+        WITH LastMessages AS (
+            SELECT
+                CASE
+                    WHEN sender_ID = #{userId} THEN receiver_ID
+                    ELSE sender_ID
+                    END AS contact_id,
+                m.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY
+                        CASE
+                            WHEN sender_ID = #{userId} THEN receiver_ID
+                            ELSE sender_ID
+                            END
+                    ORDER BY created_at DESC
+                    ) AS rn
+            FROM message m
+            WHERE sender_ID = #{userId} OR receiver_ID = #{userId}
+        )
+        SELECT
+            contact_id AS "contactId",
+            MSG_ID AS "msgId",
+            sender_ID AS "senderId",
+            receiver_ID AS "receiverId",
+            content AS "content",
+            created_at AS "createdAt",
+            `read` AS "read"
+        FROM LastMessages
+        WHERE rn = 1
+        ORDER BY created_at DESC
+    </select>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         MSG_ID, sender_ID, receiver_ID, content, created_at, read
