@@ -12,7 +12,7 @@ import javax.annotation.security.PermitAll;
 
 /**
  * <p>
- *  验证码控制器
+ *  verification code controller
  * </p>
  *
  * @author comp9900_proj15
@@ -29,9 +29,9 @@ public class VerificationController {
     private UserService userService;
 
     /**
-     * 验证邮箱
-     * @param params 包含邮箱和验证码的参数
-     * @return 验证结果
+     * verify email and code
+     * @param params contains email and code
+     * @return verification result
      */
     @PostMapping("/verify")
     @PermitAll
@@ -41,41 +41,39 @@ public class VerificationController {
         String email = params.get("email");
         String code = params.get("code");
         
-        // 参数校验
         if (email == null || email.trim().isEmpty()) {
-            return R.error("邮箱不能为空");
+            return R.error("email cannot be empty");
         }
         if (code == null || code.trim().isEmpty()) {
-            return R.error("验证码不能为空");
+            return R.error("verification code cannot be empty");
         }
         
         try {
-            // 检查邮箱是否存在
+            // check if email exists
             if (!userService.existsByEmail(email)) {
-                return R.error("该邮箱未注册");
+                return R.error("email not registered");
             }
             
-            // 验证验证码
+            // verify the code
             boolean isValid = verificationService.verifyCode(email, code);
             
             if (!isValid) {
-                return R.error("验证码无效或已过期");
+                return R.error("code is invalid or expired");
             }
             
-            // 更新用户邮箱验证状态
-            //userService.updateEmailVerificationStatus(email, 1);
+
             
-            return R.success("邮箱验证成功");
+            return R.success("verification successful");
         } catch (Exception e) {
             e.printStackTrace();
-            return R.error("验证失败: " + e.getMessage());
+            return R.error("verfication false: " + e.getMessage());
         }
     }
     
     /**
-     * 重发验证码
-     * @param params 包含邮箱的参数
-     * @return 重发结果
+     * resend verification code
+     * @param params contains email
+     * @return resend result
      */
     @PostMapping("/resend")
     @PermitAll
@@ -84,28 +82,28 @@ public class VerificationController {
         
         String email = params.get("email");
         
-        // 参数校验
+
         if (email == null || email.trim().isEmpty()) {
-            return R.error("邮箱不能为空");
+            return R.error("email cannot be empty");
         }
         
         try {
-            // 检查邮箱是否存在
+            // check if email exists
             if (!userService.existsByEmail(email)) {
-                return R.error("该邮箱未注册");
+                return R.error("this email is not registered");
             }
             
-            // 重发验证码
+            // resend the verification code
             verificationService.resendVerificationCode(email);
             
-            return R.success("验证码已重新发送到您的邮箱");
+            return R.success("verification code resent successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return R.error("重发验证码失败: " + e.getMessage());
+            return R.error("resend false: " + e.getMessage());
         }
     }
     @GetMapping("/test")
     public R<String> test() {
-        return R.success("VerificationController工作正常");
+        return R.success("VerificationController is working");
 }
 }

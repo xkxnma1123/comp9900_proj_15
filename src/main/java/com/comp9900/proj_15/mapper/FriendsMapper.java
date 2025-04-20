@@ -11,7 +11,7 @@ import java.util.Map;
 public interface FriendsMapper extends BaseMapper<Friends> {
     
     /**
-     * 获取好友请求列表
+     * getFriendRequests
      */
     @Select("SELECT f.UID, f.Friend_ID, f.Status, u.name as friend_name, u.email as friend_email " +
             "FROM Friends f JOIN User u ON f.UID = u.ID " +
@@ -19,7 +19,7 @@ public interface FriendsMapper extends BaseMapper<Friends> {
     List<Map<String, Object>> getFriendRequests(@Param("userId") Integer userId);
     
     /**
-     * 获取所有好友
+     * getFriends
      */
     @Select("SELECT f.UID, f.Friend_ID, u.name as friend_name, u.email as friend_email " +
             "FROM Friends f JOIN User u ON f.Friend_ID = u.ID " +
@@ -27,7 +27,7 @@ public interface FriendsMapper extends BaseMapper<Friends> {
     List<Map<String, Object>> getFriends(@Param("userId") Integer userId);
 
     /**
-     * 获取所有好友
+     * getFriendsStatus
      */
     @Select("SELECT f.UID, f.Friend_ID,f.Status, u.name as friend_name, u.email as friend_email " +
             "FROM Friends f JOIN User u ON f.Friend_ID = u.ID " +
@@ -35,31 +35,32 @@ public interface FriendsMapper extends BaseMapper<Friends> {
     List<Map<String, Object>> getFriendsStatus(@Param("userId") Integer userId);
     
     /**
-     * 检查好友请求是否已存在
+     * checkFriendRequestExists
      */
     @Select("SELECT COUNT(*) FROM Friends WHERE UID = #{userId} AND Friend_ID = #{friendId}")
     Long checkFriendRequestExists(@Param("userId") Integer userId, @Param("friendId") Integer friendId);
     
     /**
-     * 添加好友请求
+     * addFriendRequest
      */
     @Insert("INSERT INTO Friends(UID, Friend_ID, Status) VALUES(#{userId}, #{friendId}, 'pending')")
     void addFriendRequest(@Param("userId") Integer userId, @Param("friendId") Integer friendId);
     
     /**
-     * 更新好友请求状态
+     * updateFriendRequestStatus
      */
     @Update("UPDATE Friends SET Status = #{status} WHERE UID = #{userId} AND Friend_ID = #{friendId}")
     void updateFriendRequestStatus(@Param("userId") Integer userId, @Param("friendId") Integer friendId, @Param("status") String status);
 
     /**
-     * 添加双向好友关系
+     * addReverseFriend
      */
     @Insert("INSERT INTO Friends(UID, Friend_ID, Status) VALUES(#{friendId}, #{userId}, 'accept')")
     void addReverseFriend(@Param("userId") Integer userId, @Param("friendId") Integer friendId);
     
     /**
-     * 获取好友请求详情
+     * getFriendRequest
+     * This method retrieves a specific friend request based on the user ID and friend ID.
      */
     @Select("SELECT * FROM Friends WHERE UID = #{userId} AND Friend_ID = #{friendId}")
     Friends getFriendRequest(@Param("userId") Integer userId, @Param("friendId") Integer friendId);

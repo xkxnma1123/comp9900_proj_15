@@ -11,7 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 /**
- * 邮件服务实现
+ * email service implementation
  */
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(content, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("发送邮件失败: " + e.getMessage());
+            throw new RuntimeException("send email false: " + e.getMessage());
         }
     }
 }

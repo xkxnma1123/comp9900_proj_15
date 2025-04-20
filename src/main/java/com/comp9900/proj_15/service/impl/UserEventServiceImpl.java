@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 /**
  * <p>
- *  服务实现类
+ *  user event service implementation
  * </p>
  *
  * @author comp9900_proj15
@@ -38,28 +38,28 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
     private EventService eventService;
 
     /**
-     * 用户参加活动
+     * user attends an event
      *
-     * @param userId 用户ID
-     * @param eventId 活动ID
-     * @return 创建的UserEvent记录
+     * @param userId 
+     * @param eventId 
+     * @return created UserEvent record
      */
     @Override
     @Transactional
     public UserEvent attendEvent(Long userId, Long eventId) {
-        // 检查用户是否存在
+        // check if user exists
         User user = userService.getById(userId);
         if (user == null) {
-            throw new RuntimeException("用户不存在，ID: " + userId);
+            throw new RuntimeException("this user does not exist: " + userId);
         }
 
-//         检查活动是否存在
+//         check if event exists
         Event event = eventService.getById(eventId);
         if (event == null) {
-            throw new RuntimeException("活动不存在，ID: " + eventId);
+            throw new RuntimeException("event does not exist: " + eventId);
         }
 
-        // 检查用户是否已经参加过此活动
+        // Check if the user has already participated in this event
         LambdaQueryWrapper<UserEvent> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserEvent::getUid, userId)
                 .eq(UserEvent::getEid, eventId)
@@ -68,39 +68,39 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
         UserEvent existingUserEvent = getOne(queryWrapper, false);
 
         if (existingUserEvent != null) {
-            throw new RuntimeException("用户已经参加过此活动");
+            throw new RuntimeException("user has already attended this event");
         }
 
-        // 查找是否有其他状态的记录
+        // Find the activity records that the user attended
         queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserEvent::getUid, userId)
                 .eq(UserEvent::getEid, eventId);
 
         existingUserEvent = getOne(queryWrapper, false);
 
-        // 创建或更新UserEvent记录
+        // Create or update a UserEvent record
         UserEvent userEvent;
         boolean shouldAwardCoins = false;
 
         if (existingUserEvent != null) {
             userEvent = existingUserEvent;
-            // 只有当checkFlag为false时才奖励代币
+            // Tokens are awarded only when checkFlag is false
             shouldAwardCoins = !userEvent.isCheckFlag();
         } else {
             userEvent = new UserEvent();
             userEvent.setUid(userId.intValue());
             userEvent.setEid(eventId.intValue());
-            userEvent.setCheckFlag(true); // 新记录设置checkFlag为true
-            shouldAwardCoins = true; // 新记录应该获得代币
+            userEvent.setCheckFlag(true); // Set checkFlag to true for new records
+            shouldAwardCoins = true; // New records should receive tokens
         }
 
-        // 设置状态为attend
+        // set the status to "attend"
         userEvent.setStatus("attend");
 
-        // 保存用户活动记录
+        // save or update the record
         saveOrUpdate(userEvent);
 
-        // 根据shouldAwardCoins判断是否给用户奖励代币
+        // Determine whether to award tokens to users based on shouldAwardCoins
         if (shouldAwardCoins) {
             Integer eventCoin = event.getCoin();
             if (eventCoin != null && eventCoin > 0) {
@@ -117,29 +117,29 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
     }
 
     /**
-     * 用户退出活动
-     * 仅更改状态为quit，不改变check标志
+     * user quits an event
+     * only change the status to "quit", do not change the check flag
      *
-     * @param userId 用户ID
-     * @param eventId 活动ID
-     * @return 更新后的UserEvent对象
+     * @param userId 
+     * @param eventId 
+     * @return updated UserEvent object
      */
     @Override
     @Transactional
     public UserEvent quitEvent(Long userId, Long eventId) {
-        // 检查用户是否存在
+        // check if user exists
         User user = userService.getById(userId);
         if (user == null) {
-            throw new RuntimeException("用户不存在，ID: " + userId);
+            throw new RuntimeException("user does not exist, id: " + userId);
         }
 
-        // 检查活动是否存在
+        // check if event exists
         Event event = eventService.getById(eventId);
         if (event == null) {
-            throw new RuntimeException("活动不存在，ID: " + eventId);
+            throw new RuntimeException("event does not exist, id: " + eventId);
         }
 
-        // 查找用户参加的活动记录
+        // Find the activity records that the user attended
         LambdaQueryWrapper<UserEvent> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserEvent::getUid, userId)
                 .eq(UserEvent::getEid, eventId);
@@ -147,13 +147,13 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
         UserEvent userEvent = getOne(queryWrapper, false);
 
         if (userEvent == null) {
-            throw new RuntimeException("用户未参加此活动");
+            throw new RuntimeException("user has not attended this event");
         }
 
-        // 更新状态为quit，保持check标志不变
+        // update the status to "quit", do not change the check flag
         userEvent.setStatus("quit");
 
-        // 保存更新后的记录
+        // update the record
         updateById(userEvent);
 
         return userEvent;

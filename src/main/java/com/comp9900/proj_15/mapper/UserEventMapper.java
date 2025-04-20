@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- *  Mapper 接口
+ *  Mapper interface for UserEvent entity.
  * </p>
  *
  * @author comp9900_proj15

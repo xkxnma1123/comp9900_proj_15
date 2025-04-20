@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  前端控制器
+ *  front end controller
  * </p>
  *
  * @author comp9900_proj15
@@ -35,12 +35,9 @@ public class FriendsController {
         
         try {
             friendsService.sendFriendRequest(userId, friendId);
-            // 选择以下两种调用方式之一:
-            // 方式1: 使用数据作为参数 - 消息将是默认的"操作成功"
-            return R.success((Void) null);  // 无数据，传null
             
-            // 方式2: 使用自定义消息和数据
-            // return R.success("好友请求发送成功", null);
+            return R.success((Void) null);  
+ 
         } catch (Exception e) {
             return R.error(e.getMessage());
         }
@@ -54,22 +51,19 @@ public class FriendsController {
         
         try {
             friendsService.processFriendRequest(userId, friendId, action);
-            // 选择消息内容
-            String message = action.equals("accept") ? "已接受好友请求" : "已拒绝好友请求";
-            
-            // 选择以下两种调用方式之一:
-            // 方式1: 使用消息和数据
+            String message = action.equals("accept") ? "accept" : "decline";
+
             return R.success(message, null);
-            
-            // 方式2: 只使用数据，消息将是默认的"操作成功"
-            // return R.success(null);
+
         } catch (Exception e) {
             return R.error(e.getMessage());
         }
     }
     
     /**
-     * 获取好友请求列表
+     * get friend request list
+     * @param userId
+     * @return List of friend requests
      */
     @GetMapping("/requests/{userId}")
     public R<List<Map<String, Object>>> getFriendRequests(@PathVariable Integer userId) {
@@ -82,7 +76,8 @@ public class FriendsController {
     }
     
     /**
-     * 获取好友列表
+     * get friend list
+     * @param userId
      */
     @GetMapping("/list/{userId}")
     public R<List<Map<String, Object>>> getFriends(@PathVariable Integer userId) {

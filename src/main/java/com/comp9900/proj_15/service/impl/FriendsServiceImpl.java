@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
- *  服务实现类
+ *  friends service implementation class
  * </p>
  *
  * @author comp9900_proj15
@@ -31,51 +31,51 @@ public class FriendsServiceImpl extends ServiceImpl<FriendsMapper, Friends> impl
     
     @Override
     public void sendFriendRequest(Integer userId, Integer friendId) {
-        // 检查用户是否存在
+        // check if user exists
         Long userExists = userMapper.countById(userId);
         Long friendExists = userMapper.countById(friendId);
         
         if (userExists == 0) {
-            throw new RuntimeException("发送者用户不存在");
+            throw new RuntimeException("sender user does not exist");
         }
         
         if (friendExists == 0) {
-            throw new RuntimeException("接收者用户不存在");
+            throw new RuntimeException("receiver user does not exist");
         }
         
-        // 检查是否已经是好友或已发送请求
+        // check if friend request already exists or if they are already friends
         Long friendRequestExists = friendsMapper.checkFriendRequestExists(userId, friendId);
         
         if (friendRequestExists > 0) {
-            throw new RuntimeException("已经发送过好友请求或已经是好友");
+            throw new RuntimeException("already sent a friend request or already friends");
         }
         
-        // 发送好友请求
+        // send friend request
         friendsMapper.addFriendRequest(userId, friendId);
     }
     
     @Override
     @Transactional
     public void processFriendRequest(Integer userId, Integer friendId, String action) {
-        // 获取好友请求
+        // get the friend request
         Friends request = friendsMapper.getFriendRequest(userId, friendId);
         
         if (request == null) {
-            throw new RuntimeException("好友请求不存在");
+            throw new RuntimeException("the friend request does not exist");
         }
         
         if (!request.getStatus().equals("pending")) {
-            throw new RuntimeException("该请求已处理");
+            throw new RuntimeException("this friend request has already been processed");
         }
         
         if ("accept".equals(action)) {
-            // 接受好友请求 - 确保使用正确的状态值
+            // accept friend request - ensure using the correct status value
             friendsMapper.updateFriendRequestStatus(userId, friendId, "accept");
             
-            // 创建反向好友关系
+            // create a reverse friend relationship
             friendsMapper.addReverseFriend(userId, friendId);
         } else if ("reject".equals(action)) {
-            // 拒绝好友请求 - 确保使用正确的状态值
+            // reject friend request
             friendsMapper.updateFriendRequestStatus(userId, friendId, "reject");
         }
     }

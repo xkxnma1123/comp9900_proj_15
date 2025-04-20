@@ -46,10 +46,7 @@ public interface UserService extends IService<User> {
      */
     List<Map<String, Object>> getCitiesByRegion(String countryCode, String regionCode);
 
-//    /**
-//     * 注册新用户
-//     */
-//    User registerUser(User user);
+
 
     /**
      * Update user information
@@ -80,12 +77,7 @@ public interface UserService extends IService<User> {
 
 
     /**
-     * 更新用户邮箱验证状态
-     */
-//    boolean updateEmailVerificationStatus(String email, int verifiedStatus);
-
-    /**
-     * 检查邮箱是否已注册
+     * check if email exists
      */
     boolean existsByEmail(String email);
 }

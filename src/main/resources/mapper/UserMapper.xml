@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.comp9900.proj_15.mapper.UserMapper">
 
-    <!-- 通用查询映射结果 -->
+    <!-- General query mapping results -->
     <resultMap id="BaseResultMap" type="com.comp9900.proj_15.entity.User">
         <id column="ID" property="id" />
         <result column="Name" property="name" />
@@ -22,7 +22,7 @@
         <result column="coin" property="coin" />
     </resultMap>
 
-    <!-- 通用查询结果列 -->
+    <!-- General query result column -->
     <sql id="Base_Column_List">
         ID, Name, Level_of_study, Email, Password_hash, Created_at, User_Type, User_city, User_country, User_Field, User_Language, User_Regions, User_Uni,User_icon, Email_verified, coin
     </sql>

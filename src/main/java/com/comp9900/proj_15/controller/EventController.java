@@ -31,7 +31,7 @@ public class EventController {
 
 
     /**
-     * @param userId 用户ID
+     * @param userId 
      * @return Event list with status
      */
     @GetMapping("/list")

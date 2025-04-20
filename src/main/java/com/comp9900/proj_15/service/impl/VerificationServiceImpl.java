@@ -24,7 +24,7 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationCodeMapper,
     @Override
     public String generateVerificationCode() {
         Random random = new Random();
-        int code = 100000 + random.nextInt(900000); // 生成6位数验证码
+        int code = 100000 + random.nextInt(900000); // generate a 6-digit code
         return String.valueOf(code);
     }
     
@@ -37,10 +37,10 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationCodeMapper,
     
     @Override
     public void resendVerificationCode(String email) {
-        // 将之前的验证码标记为已使用
+        // mark all previous unused codes as used
         verificationCodeMapper.invalidateAllCodesForEmail(email);
         
-        // 生成并发送新的验证码
+        // generate a new code and send it
         String code = generateVerificationCode();
         saveVerificationCode(email, code);
         emailService.sendVerificationEmail(email, code);
@@ -54,14 +54,14 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationCodeMapper,
         verificationCode.setExpiryDate(expiryDate);
         verificationCode.setUsed(0);
     
-        // 使用 MP 提供的 insert 方法
+        // insert the new verification code into the database
         this.save(verificationCode);
     }
     
     
     @Override
     public boolean verifyCode(String email, String code) {
-        // 获取最新的未使用验证码
+        // get the latest unused verification code for the email
         VerificationCode verificationCode = verificationCodeMapper.findLatestByEmail(email);
         
         if (verificationCode == null) {
@@ -69,21 +69,21 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationCodeMapper,
         }
         
         if (LocalDateTime.now().isAfter(verificationCode.getExpiryDate())) {
-            verificationCodeMapper.markAsUsed(verificationCode.getId()); // 标记过期验证码为已使用
+            verificationCodeMapper.markAsUsed(verificationCode.getId()); // mark as used if expired
             return false;
         }
         
         boolean isValid = verificationCode.getCode().equals(code);
         
         if (isValid) {
-            // 标记验证码为已使用
+            // mark the code as used
             verificationCodeMapper.markAsUsed(verificationCode.getId());
         }
         
         return isValid;
     }
     
-    // 每天凌晨2点清理过期和已使用的验证码
+    // cleanup task to delete used and expired verification codes
     @Scheduled(cron = "0 0 2 * * ?")
     public void cleanupExpiredCodes() {
         verificationCodeMapper.deleteUsedAndExpiredCodes();

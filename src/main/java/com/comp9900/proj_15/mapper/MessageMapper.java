@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  Mapper 接口
+ *  Mapper inferface for the Message entity.
  * </p>
  *
  * @author comp9900_proj15

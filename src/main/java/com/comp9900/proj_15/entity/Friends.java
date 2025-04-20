@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("Friends")
-@ApiModel(value = "Friends对象", description = "")
+@ApiModel(value = "Friends", description = "")
 public class Friends extends Model<Friends> {
 
     private static final long serialVersionUID = 1L;

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- *  服务实现类
+ *  service implementation class
  * </p>
  *
  * @author comp9900_proj15
@@ -52,26 +52,26 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Override
     public List<Event> getActivityList(Integer userId) {
-        // 1. 查询所有事件，按日期降序排序
+        // 1. Query all events, sorted by date in descending order
         LambdaQueryWrapper<Event> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(Event::getDate);
         List<Event> eventList = this.list(queryWrapper);
 
-        // 2. 查询用户参与的所有事件及状态
-        // 假设 UserEvent 模型中有 uid, eid, status 字段
+        // 2. Query all events and statuses in which the user participates
+        // Assume that the UserEvent model has uid, eid, status fields
         LambdaQueryWrapper<UserEvent> userEventQuery = new LambdaQueryWrapper<>();
         userEventQuery.eq(UserEvent::getUid, userId);
         List<UserEvent> userEvents = userEventService.list(userEventQuery);
 
-        // 3. 创建事件ID到状态的映射
+        // 3. Create a mapping of event IDs to states
         Map<Integer, String> eventStatusMap = new HashMap<>();
         for (UserEvent userEvent : userEvents) {
             eventStatusMap.put(userEvent.getEid(), userEvent.getStatus());
         }
 
-        // 4. 为每个事件添加状态字段
+        // 4. add status field to each event
         for (Event event : eventList) {
-            // 如果用户参与了该事件且状态为attend，则设置状态为attend，否则为none
+            // If the user participates in the event and the status is attend, set the status to attend, otherwise to none
             String status = "none";
             if (eventStatusMap.containsKey(event.getId())) {
                 String userEventStatus = eventStatusMap.get(event.getId());
@@ -80,7 +80,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
                 }
             }
 
-            // 为事件设置状态字段（假设Event类有status字段或可以通过其他方式设置）
+            // Set the status field for the event (assuming the Event class has a status field or can be set by other means)
             event.setStatus(status);
         }
 
@@ -109,13 +109,13 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
             return null;
         }
 
-        // 查询当前用户是否参与了该事件
+        // check if the user is in the event
         QueryWrapper<UserEvent> userEventQuery = new QueryWrapper<>();
         userEventQuery.eq("EID", id)
                 .eq("UID", userId);
         UserEvent userEvent = userEventService.getOne(userEventQuery);
 
-        // 设置Status字段
+        // set the status based on userEvent
         String status = "none";
         if (userEvent != null && "attend".equals(userEvent.getStatus())) {
             status = "attend";
@@ -152,43 +152,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         result.put("participants", participants.size());
 
         return result;
-//        // Get the event by id
-//        Event event = this.getById(id);
-//
-//        if (event == null) {
-//            return null;
-//        }
-//
-//        // Create the result map
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("event", event);
-//
-//        // Query participants for this event
-//        List<Map<String, Object>> participants = new ArrayList<>();
-//
-//        // Find all user-event relationships for this event with status "attended"
-//        QueryWrapper<UserEvent> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("EID", id)
-//                .eq("Status", "attend");  // Only include users who attended
-//        List<UserEvent> userEvents = userEventService.list(queryWrapper);
-//
-//        // For each user in the relationship, get their details using UserMapper
-//        for (UserEvent userEvent : userEvents) {
-//            Integer userId = userEvent.getUid();
-//            User user = userMapper.selectById(userId);
-//
-//            if (user != null) {
-//                Map<String, Object> participantInfo = new HashMap<>();
-//                participantInfo.put("id", user.getId());
-//                participantInfo.put("name", user.getName());
-//                participants.add(participantInfo);
-//            }
-//        }
-//
-//        // Add participant count to the result instead of the full list
-//        result.put("participants", participants.size());
-//
-//        return result;
+
     }
 
     /**
@@ -199,78 +163,29 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
      * @return Map containing user info and friendship status
      */
     @Override
-//    public Map<String, Object> checkUserFriendship(Integer eventID, Integer myUserId) {
-//        // 创建结果映射
-//        Map<String, Object> result = new HashMap<>();
-//
-//        // 获取我的好友列表
-//        List<Map<String, Object>> myFriends = friendsService.getFriends(myUserId);
-//
-//        // 查询该活动的参与者
-//        List<Map<String, Object>> participants = new ArrayList<>();
-//
-//        // 查找所有参与该活动的用户
-//        QueryWrapper<UserEvent> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("EID", eventID)
-//                .eq("Status", "attend");  // 只包括已参加的用户
-//        List<UserEvent> userEvents = userEventService.list(queryWrapper);
-//
-//        // 对于每个参与关系，获取用户详细信息
-//        for (UserEvent userEvent : userEvents) {
-//            Integer participantId = userEvent.getUid();
-//
-//            // 跳过当前用户自己
-//            if (participantId.equals(myUserId)) {
-//                continue;
-//            }
-//
-//            User participantUser = userMapper.selectById(participantId);
-//
-//            if (participantUser != null) {
-//                Map<String, Object> participantInfo = new HashMap<>();
-//                participantInfo.put("id", participantUser.getId());
-//                participantInfo.put("name", participantUser.getName());
-//
-//                // 检查此参与者是否是当前用户的好友
-//                boolean isParticipantFriend = myFriends.stream()
-//                        .anyMatch(f -> f.containsKey("Friend_ID") && f.get("Friend_ID").equals(participantId));
-//
-//                // 添加新的必需字段
-//                participantInfo.put("isFriend", isParticipantFriend ? "1" : "0");
-//                participantInfo.put("userUni", participantUser.getUserUni());
-//                participantInfo.put("userField", participantUser.getUserField());
-//
-//                participants.add(participantInfo);
-//            }
-//        }
-//
-//        // 将参与者列表添加到结果中
-//        result.put("participants", participants);
-//
-//        return result;
 
-//    }
+//
     public Map<String, Object> checkUserFriendship(Integer eventID, Integer myUserId) {
-        // 创建结果映射
+        // create a map to store the result
         Map<String, Object> result = new HashMap<>();
 
-        // 获取我的好友列表
+        // get my friends
         List<Map<String, Object>> myFriends = friendsService.getFriendsStatus(myUserId);
 
-        // 查询该活动的参与者
+        // find all users who participated in the event
         List<Map<String, Object>> participants = new ArrayList<>();
 
-        // 查找所有参与该活动的用户
+        // Find all users who participated in this activity
         QueryWrapper<UserEvent> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("EID", eventID)
-                .eq("Status", "attend");  // 只包括已参加的用户
+                .eq("Status", "attend");  // Include only users who have participated
         List<UserEvent> userEvents = userEventService.list(queryWrapper);
 
-        // 对于每个参与关系，获取用户详细信息
+        // For each participating relationship, get the user details
         for (UserEvent userEvent : userEvents) {
             Integer participantId = userEvent.getUid();
 
-            // 跳过当前用户自己
+            // Skip the current user
             if (participantId.equals(myUserId)) {
                 continue;
             }
@@ -282,22 +197,22 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
                 participantInfo.put("id", participantUser.getId());
                 participantInfo.put("name", participantUser.getName());
 
-                // 检查此参与者是否是当前用户的好友，并获取好友状态
-                String friendStatus = "none";  // 默认为none
+                // Check if this participant is a friend of the current user and get the friend status
+                String friendStatus = "none";  
 
-                // 查找匹配的好友记录
+                // Find matching friend records
                 Optional<Map<String, Object>> friendRecord = myFriends.stream()
                         .filter(f -> f.containsKey("Friend_ID") && f.get("Friend_ID").equals(participantId))
                         .findFirst();
 
-                // 如果找到了好友记录，获取Status字段
+                // If a friend record is found, get the Status field
                 if (friendRecord.isPresent()) {
                     friendStatus = friendRecord.get().containsKey("Status") ?
                             String.valueOf(friendRecord.get().get("Status")) :
                             "none";
                 }
 
-                // 添加新的必需字段，使用friendStatus替换原来的isFriend
+                // Add a new required field and use friendStatus to replace the original isFriend
                 participantInfo.put("friendStatus", friendStatus);
                 participantInfo.put("userUni", participantUser.getUserUni());
                 participantInfo.put("userField", participantUser.getUserField());
@@ -306,7 +221,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
             }
         }
 
-        // 将参与者列表添加到结果中
+        // Add the list of participants to the results
         result.put("participants", participants);
 
         return result;

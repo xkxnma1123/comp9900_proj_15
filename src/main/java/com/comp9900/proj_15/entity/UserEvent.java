@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("User_Event")
-@ApiModel(value = "UserEvent对象", description = "")
+@ApiModel(value = "UserEvent", description = "")
 public class UserEvent extends Model<UserEvent> {
 
     private static final long serialVersionUID = 1L;

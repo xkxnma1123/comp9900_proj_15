@@ -27,7 +27,6 @@ import org.springframework.web.client.RestTemplate;
 
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,44 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private FriendsService friendsService;
 
-//    @Override
-//    public Map<String, Object> register (String name, String email, String levelOfStudy, String password){
-//        // 检查邮箱是否已存在
-//        Long count = userMapper.countByEmail(email);
-//
-//        if (count > 0) {
-//            throw new RuntimeException("邮箱已被注册");
-//        }
-//
-//        try {
-//            // 使用MD5加密密码
-//            String hashedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
-//
-//            // 插入用户数据
-//            userMapper.insertUser(
-//                    name,
-//                    email,
-//                    levelOfStudy,
-//                    hashedPassword,
-//                    LocalDateTime.now(),
-//                    userCountry,
-//
-//                    "normal"
-//            );
-//
-//            // 查询并返回用户信息
-//            Map<String, Object> user = userMapper.findUserByEmail(email);
-//
-//            if (user == null || user.isEmpty()) {
-//                throw new RuntimeException("用户创建失败");
-//            }
-//
-//            return user;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("创建用户失败: " + e.getMessage());
-//        }
-//    }
+
     @Override
     public Map<String, Object> register(User user) {
         // Check if email already exists
@@ -143,27 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new RuntimeException("Failed to get user information");
         }
 
-        // 打印整个用户对象，查看所有字段
-        // System.out.println("用户数据: " + user);
-
-        // 特别检查email_verified字段
-        //Object verifiedObj = user.get("email_verified");
-        // System.out.println("邮箱验证状态: " + verifiedObj + ", 类型: " + (verifiedObj != null ? verifiedObj.getClass().getName() : "null"));
-
-
-//        boolean isVerified = false;
-//
-//        if (verifiedObj instanceof Boolean) {
-//            isVerified = (Boolean) verifiedObj;
-//        } else if (verifiedObj instanceof Number) {
-//            isVerified = ((Number) verifiedObj).intValue() == 1;
-//        } else if (verifiedObj instanceof String) {
-//            isVerified = "1".equals(verifiedObj) || "true".equalsIgnoreCase((String) verifiedObj);
-//        }
-//
-//        if (!isVerified) {
-//            throw new RuntimeException("请先验证您的邮箱再登录");
-//        }
+        
 
         return user;
     }
@@ -279,22 +221,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return cities;
     }
 
-//    /**
-//     * 注册新用户
-//     */
-//    @Override
-//    public User registerUser(User user) {
-//        // 设置创建时间
-//        user.setCreatedAt(LocalDateTime.now());
-//
-//        // 这里应该添加密码加密逻辑
-//        // user.setPasswordHash(encryptPassword(user.getPasswordHash()));
-//
-//        // 保存到数据库
-//        save(user);
-//
-//        return user;
-//    }
+
 
     /**
      * Update user information
@@ -307,12 +234,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new RuntimeException("User not found with id: " + user.getId());
         }
 
-        // If new password is provided, it should be encrypted
-        // if (user.getPasswordHash() != null && !user.getPasswordHash().equals(existingUser.getPasswordHash())) {
-        //     user.setPasswordHash(encryptPassword(user.getPasswordHash()));
-        // }
 
-        // Update user information
         updateById(user);
 
         return getById(user.getId());
@@ -320,45 +242,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city, int userID) {
-        // 直接使用传入的int类型userID
+        // Directly use the int type userID passed in
         Integer myUserId = userID;
 
-        // 1. 首先查询所有满足条件的ID
+        // 1. First query all IDs that meet the conditions
         List<Integer> allIds = baseMapper.selectIdsByCondition(field, university, city);
 
-        // 如果没有数据，返回空页面
+        // If there is no data, return an empty page
         if (allIds == null || allIds.isEmpty()) {
             return new Page<>(page.getCurrent(), page.getSize(), 0);
         }
 
-        // 2. 从结果中去除当前用户自己的ID
+        // 2. Remove the current user's own ID from the results
         if (myUserId != null) {
             allIds.removeIf(id -> id.equals(myUserId));
         }
 
-        // 3. 获取当前用户的好友列表，并从结果中去除好友的ID
+        // 3. Get the current user's friend list and remove the friend's ID from the result
         if (myUserId != null) {
             List<Map<String, Object>> myFriends = friendsService.getFriends(myUserId);
 
-            // 提取所有好友的ID
+            // Extract all friends' IDs
             Set<Integer> friendIds = myFriends.stream()
                     .filter(f -> f.containsKey("Friend_ID") && f.get("Friend_ID") instanceof Integer)
                     .map(f -> (Integer) f.get("Friend_ID"))
                     .collect(Collectors.toSet());
 
-            // 从结果中去除好友的ID
+            // Remove the friend's ID from the results
             allIds.removeIf(friendIds::contains);
         }
 
-        // 如果去除自己和好友后没有剩余数据，返回空页面
+        // If there is no data left after removing yourself and your friends, return to an empty page
         if (allIds.isEmpty()) {
             return new Page<>(page.getCurrent(), page.getSize(), 0);
         }
 
-        // 4. 随机打乱ID列表
+        // 4. Randomly shuffle the ID list
         Collections.shuffle(allIds);
 
-        // 5. 根据分页参数计算当前页面的ID子集
+        // 5. Calculate the ID subset of the current page based on the paging parameters
         int startIndex = (int) ((page.getCurrent() - 1) * page.getSize());
         if (startIndex >= allIds.size()) {
             return new Page<>(page.getCurrent(), page.getSize(), allIds.size());
@@ -367,56 +289,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int endIndex = Math.min(startIndex + (int) page.getSize(), allIds.size());
         List<Integer> pageIds = allIds.subList(startIndex, endIndex);
 
-        // 6. 查询这些ID的完整记录数据
+        // 6. Query the complete record data of these IDs
         List<User> users = new ArrayList<>();
         if (!pageIds.isEmpty()) {
             users = baseMapper.selectByIds(pageIds);
         }
 
-        // 7. 设置分页结果并返回
+        // 7. Set the page result and return
         Page<User> resultPage = new Page<>(page.getCurrent(), page.getSize(), allIds.size());
         resultPage.setRecords(users);
 
         return resultPage;
     }
 
-//    @Override
-//    public Page<User> randomPageByConditions(Page<User> page, String field, String university, String city, String userID) {
-
-//        // 1. First query all IDs that meet the conditions
-//        List<Integer> allIds = baseMapper.selectIdsByCondition(field, university, city);
-//
-//        // If no data, return empty page
-//        if (allIds == null || allIds.isEmpty()) {
-//            return new Page<>(page.getCurrent(), page.getSize(), 0);
-//        }
-//
-//        // 2. Randomly shuffle ID list
-//        Collections.shuffle(allIds);
-//
-//        // 3. Calculate current page's ID subset based on pagination parameters
-//        int startIndex = (int) ((page.getCurrent() - 1) * page.getSize());
-//        if (startIndex >= allIds.size()) {
-//            return new Page<>(page.getCurrent(), page.getSize(), allIds.size());
-//        }
-//
-//        int endIndex = Math.min(startIndex + (int) page.getSize(), allIds.size());
-//        List<Integer> pageIds = allIds.subList(startIndex, endIndex);
-//
-//        // 4. Query complete record data for these IDs
-//        List<User> users = new ArrayList<>();
-//        if (!pageIds.isEmpty()) {
-//            users = baseMapper.selectByIds(pageIds);
-//        }
-//
-//        // 5. Set pagination result and return
-//        Page<User> resultPage = new Page<>(page.getCurrent(), page.getSize(), allIds.size());
-//        resultPage.setRecords(users);
-//
-//        return resultPage;
-        // 转换用户ID为整数类型
-
-//    }
 
     @Override
     public Map<String, String> getUserPeerMatchInfo(Integer userId) {
@@ -441,10 +326,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.getById(id);
     }
 
-//    @Override
-//    public boolean updateEmailVerificationStatus(String email, int verifiedStatus) {
-//        return userMapper.updateEmailVerificationStatus(email, verifiedStatus) > 0;
-//    }
 
     @Override
     public boolean existsByEmail(String email) {

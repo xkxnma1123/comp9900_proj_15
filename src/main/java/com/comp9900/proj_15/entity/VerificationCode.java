@@ -65,7 +65,7 @@ public class VerificationCode {
     }
 
     /**
-     * 检查验证码是否已过期
+     * check if the verification code is expired
      */
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(this.expiryDate);

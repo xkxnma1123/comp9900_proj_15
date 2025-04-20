@@ -5,82 +5,82 @@
 
 <generatorConfiguration>
     <context id="MySQLContext" targetRuntime="MyBatis3" defaultModelType="flat">
-        <!-- 生成的Java文件的编码 -->
+        <!-- Encoding of generated Java files -->
         <property name="javaFileEncoding" value="UTF-8"/>
 
-        <!-- 格式化Java代码 -->
+        <!-- Formatting Java Code -->
         <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
 
-        <!-- 格式化XML代码 -->
+        <!-- Formatting XML code -->
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
 
-        <!-- 不生成注释 -->
+        <!-- Do not generate comments -->
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
 
-        <!-- 数据库连接信息 -->
+        <!-- Database connection information -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/backend_db"
                         userId="root"
                         password="ab20011123">
-            <!-- MySQL 8.0+ 需要设置 -->
+            <!-- MySQL 8.0+  -->
             <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
-        <!-- Java类型解析器 -->
+        <!-- Java Type Resolver -->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
-            <!-- 使用 Java8 的日期类型 -->
+            <!-- Using Java 8's Date Type -->
             <property name="useJSR310Types" value="true"/>
         </javaTypeResolver>
 
-        <!-- 实体类生成配置 -->
+        <!-- Entity class generation configuration -->
         <javaModelGenerator targetPackage="com.comp9900.proj_15.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <!-- Mapper XML文件生成配置 -->
+        <!-- Mapper XML file generation configuration -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <!-- Mapper接口生成配置 -->
+        <!-- Mapper Interface generation configuration -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.comp9900.proj_15.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!-- 指定数据库表 -->
-        <!-- User表配置 -->
+        <!-- Specifying a database table -->
+        <!-- User table configuration -->
         <table tableName="User" domainObjectName="User">
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="ID" sqlStatement="JDBC" identity="true"/>
         </table>
 
-        <!-- Event表配置 -->
+        <!-- Event table configuration -->
         <table tableName="Event" domainObjectName="Event">
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="ID" sqlStatement="JDBC" identity="true"/>
         </table>
 
-        <!-- Friends表配置 -->
+        <!-- Friends table configuration -->
         <table tableName="Friends" domainObjectName="Friends">
             <property name="useActualColumnNames" value="true"/>
-            <!-- 复合主键不需要generatedKey -->
+            <!-- Composite primary keys do not require generatedKey -->
         </table>
 
-        <!-- Message表配置 -->
+        <!-- Message table configuration -->
         <table tableName="Message" domainObjectName="Message">
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="MSG_ID" sqlStatement="JDBC" identity="true"/>
         </table>
 
-        <!-- User_Event表配置 -->
+        <!-- User_Event Table Configuration -->
         <table tableName="User_Event" domainObjectName="UserEvent">
             <property name="useActualColumnNames" value="true"/>
-            <!-- 复合主键不需要generatedKey -->
+            <!-- Composite primary keys do not require generatedKey -->
         </table>
     </context>
 </generatorConfiguration>

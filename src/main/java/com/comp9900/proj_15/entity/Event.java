@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("Event")
-@ApiModel(value = "Event对象", description = "")
+@ApiModel(value = "Event", description = "")
 public class Event extends Model<Event> {
 
 
@@ -52,8 +52,8 @@ public class Event extends Model<Event> {
     @TableField("coin")
     private Integer coin;
 
-    @TableField(exist = false)  // 告诉MyBatis-Plus这个字段不存在于数据库表中
-    @JsonInclude(JsonInclude.Include.NON_NULL)  // 当字段为null时不序列化
+    @TableField(exist = false)  
+    @JsonInclude(JsonInclude.Include.NON_NULL)  
     private String status;
 
     public static final String ID = "ID";

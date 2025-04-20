@@ -50,7 +50,7 @@ public class MessageController {
     }
 
     @GetMapping("/latest/{userId}")
-    @ApiOperation("获取用户与所有联系人的最后一条消息")
+    @ApiOperation("get latest messages with contacts")
     public ResponseEntity<List<Map<String, Object>>> getLatestMessagesWithContacts(
             @PathVariable Integer userId) {
         List<Map<String, Object>> result = messageService.getLatestMessagesWithContacts(userId);

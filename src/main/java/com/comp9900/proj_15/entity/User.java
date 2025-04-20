@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("User")
-@ApiModel(value = "User对象", description = "")
+@ApiModel(value = "User", description = "")
 public class User extends Model<User> {
 
     private static final long serialVersionUID = 1L;

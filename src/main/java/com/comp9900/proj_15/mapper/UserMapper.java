@@ -16,7 +16,7 @@ import java.util.List;
 
 
 /**
- * 用户Mapper接口
+ * user mapper interface
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
@@ -26,13 +26,13 @@ public interface UserMapper extends BaseMapper<User> {
     Map<String, Object> findUserById(Long id);
     
     /**
-     * 通过邮箱检查用户是否存在
+     * check if email exists
      */
     @Select("SELECT COUNT(*) FROM User WHERE email = #{email}")
     Long countByEmail(@Param("email") String email);
     
     /**
-     * 直接插入用户数据
+     * insert user information into the database
      */
     @Insert("INSERT INTO User(name, email, level_of_study, password_hash, created_at, user_type, user_country, user_regions, user_city, user_field, user_uni, user_language) " +
             "VALUES(#{name}, #{email}, #{levelOfStudy}, #{passwordHash}, #{createdAt}, #{userType}, #{userCountry}, #{userRegions}, #{userCity}, #{userField}, #{userUni}, #{userLanguage})")
@@ -50,7 +50,7 @@ public interface UserMapper extends BaseMapper<User> {
                     @Param("userLanguage") String userLanguage);
     
     /**
-     * 查询用户信息但不包含密码
+     * get user information by email
      */
     @Select("SELECT id, name, email, level_of_study, created_at, user_type, user_city, user_country, " +
             "user_field, user_language, user_regions, user_uni " +
@@ -58,25 +58,25 @@ public interface UserMapper extends BaseMapper<User> {
     Map<String, Object> findUserByEmail(@Param("email") String email);
     
     /**
-     * 获取用户密码用于验证
+     * get password hash by email
      */
     @Select("SELECT password_hash FROM User WHERE email = #{email}")
     String getPasswordByEmail(@Param("email") String email);
 
     /**
 <<<<<<< Updated upstream
-     * 根据ID检查用户是否存在
+     * check if user exists by id
      */
     @Select("SELECT COUNT(*) FROM User WHERE ID = #{id}")
     Long countById(@Param("id") Integer id);
 
 
-//     * 根据条件查询用户ID列表
+//     * get user information by 
 //     *
-//     * @param field 专业领域
-//     * @param university 大学
-//     * @param city 城市
-//     * @return 用户ID列表
+//     * @param field 
+//     * @param university 
+//     * @param city 
+//     * @return id
 //     */
     @Select("<script>"
             + "SELECT ID FROM User WHERE 1=1"
@@ -89,10 +89,10 @@ public interface UserMapper extends BaseMapper<User> {
                                        @Param("city") String city);
 
     /**
-     * 根据ID列表查询用户
+     * get user information by id
      *
-     * @param ids ID列表
-     * @return 用户列表
+     * @param ids 
+     * @return List of user information
      */
     @Select("<script>"
             + "SELECT * FROM User WHERE ID IN "
@@ -101,14 +101,6 @@ public interface UserMapper extends BaseMapper<User> {
             + "</foreach>"
             + "</script>")
     List<User> selectByIds(@Param("ids") List<Integer> ids);
-
-
-    /**
-     * 更新用户邮箱验证状态
-     */
-//    @Update("UPDATE User SET email_verified = #{verifiedStatus} WHERE email = #{email}")
-//    int updateEmailVerificationStatus(@Param("email") String email, @Param("verifiedStatus") int verifiedStatus);
-
 
 }
 

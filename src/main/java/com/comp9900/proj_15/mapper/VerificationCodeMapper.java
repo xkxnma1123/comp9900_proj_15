@@ -9,16 +9,9 @@ import java.time.LocalDateTime;
 @Mapper
 public interface VerificationCodeMapper extends BaseMapper<VerificationCode> {
     
+
     /**
-     * 插入验证码记录
-     */
-    // @Insert("INSERT INTO Verification_Code(email, code, expiry_date, used) VALUES(#{email}, #{code}, #{expiryDate}, #{used})")
-    // @Options(useGeneratedKeys = true, keyProperty = "id")
-    // int insertVerificationCode(@Param("email") String email, @Param("code") String code, 
-    //                           @Param("expiryDate") LocalDateTime expiryDate, @Param("used") int used);
- 
-    /**
-     * 查找指定邮箱最新的未使用验证码
+     * Find the latest unused verification code for the specified email
      */
     @Select("SELECT * FROM Verification_Code WHERE email = #{email} AND used = 0 ORDER BY id DESC LIMIT 1")
     @Results({
@@ -32,19 +25,19 @@ public interface VerificationCodeMapper extends BaseMapper<VerificationCode> {
     VerificationCode findLatestByEmail(@Param("email") String email);
     
     /**
-     * 将验证码标记为已使用
+     * make the specified verification code as used
      */
     @Update("UPDATE Verification_Code SET used = 1 WHERE id = #{id}")
     int markAsUsed(@Param("id") Integer id);
     
     /**
-     * 使指定邮箱的所有未使用验证码失效
+     * invalidate all verification codes for the specified email
      */
     @Update("UPDATE Verification_Code SET used = 1 WHERE email = #{email} AND used = 0")
     int invalidateAllCodesForEmail(@Param("email") String email);
     
     /**
-     * 清理已使用和过期的验证码
+     * clean up all used and expired verification codes
      */
     @Delete("DELETE FROM Verification_Code WHERE used = 1 OR expiry_date < NOW()")
     int deleteUsedAndExpiredCodes();

@@ -13,21 +13,21 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserEventService extends IService<UserEvent> {
     /**
-     * 用户参加活动
+     * user attend event
      *
-     * @param userId 用户ID
-     * @param eventId 活动ID
-     * @return 创建的UserEvent记录
+     * @param userId 
+     * @param eventId 
+     * @return created UserEvent object
      */
     UserEvent attendEvent(Long userId, Long eventId);
 
     /**
-     * 用户退出活动
-     * 仅更改状态为quit，不改变check标志
+     * quit event
+     * only change the status to "quit", keep the check flag unchanged
      *
-     * @param userId 用户ID
-     * @param eventId 活动ID
-     * @return 更新后的UserEvent对象
+     * @param userId 
+     * @param eventId 
+     * @return updated UserEvent object
      */
     UserEvent quitEvent(Long userId, Long eventId);
 }
