@@ -14,13 +14,13 @@ Maven 3.6+
 MySQL 5.7+  
 
 application.properties
-And make sure to modify the database configuration to your own:
-        spring.datasource.url=  
-        spring.datasource.username=  
-        spring.datasource.password=  
+And make sure to modify the database configuration to your own:  
+        spring.datasource.url=    
+        spring.datasource.username=    
+        spring.datasource.password=    
         
-The project uses Gmail SMTP service to send verification code emails. 
-If you want to use your own email, please modify:
+The project uses Gmail SMTP service to send verification code emails.   
+If you want to use your own email, please modify:  
         spring.mail.host=smtp.gmail.com  
         spring.mail.port=587  
         spring.mail.username=your email address  
