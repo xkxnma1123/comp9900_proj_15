@@ -80,7 +80,7 @@
 			<version>3.5.3</version>
 		</dependency>
 
-		<!-- MyBatis Plus 代码生成器 -->
+		<!-- MyBatis Plus Code Generator -->
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-generator</artifactId>
@@ -93,7 +93,7 @@
 			<version>1.6.15</version>
 		</dependency>
 
-		<!-- 代码生成器模板引擎 -->
+		<!-- Code Generator Template Engine -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -114,7 +114,7 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- JWT 库 -->
+		<!-- JWT packages -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
@@ -153,7 +153,7 @@
 			<version>3.5.3</version>
 		</dependency>
 
-		<!-- Swagger依赖 -->
+		<!-- Swagger Dependencies -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -186,7 +186,7 @@
 					<verbose>true</verbose>
 				</configuration>
 				<dependencies>
-					<!-- 插件依赖你已有的mysql驱动 -->
+					<!-- The plugin relies on your existing mysql driver -->
 					<dependency>
 						<groupId>com.mysql</groupId>
 						<artifactId>mysql-connector-j</artifactId>
