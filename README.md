@@ -13,7 +13,7 @@ Java 1.8.x+
 Maven 3.6+  
 MySQL 5.7+  
 
-application.properties
+application.properties  
 And make sure to modify the database configuration to your own:  
         spring.datasource.url=    
         spring.datasource.username=    
